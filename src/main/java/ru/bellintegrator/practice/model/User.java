@@ -2,7 +2,6 @@ package ru.bellintegrator.practice.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 @Entity
 @Table(name = "user")
@@ -23,22 +22,21 @@ public class User {
     @Column(name = "possition", length = 50)
     @NotNull
     private String possition;
-    @Column(name = "doc_number", length = 20)
-    private String docNumber;
-    @Column(name = "doc_date")
-    private Date docDate;
     @Column(name = "phone", length = 20)
     private String phone;
     @Column(name = "is_identified")
     private Boolean isIdentified;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private DocDetail docDetail;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id")
     private Office office;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doc_id")
-    private Doc doc;
+    @JoinColumn(name = "doc_type_id")
+    private DocType docType;
 
     public User() {
     }
@@ -83,22 +81,6 @@ public class User {
         this.possition = possition;
     }
 
-    public String getDocNumber() {
-        return docNumber;
-    }
-
-    public void setDocNumber(String docNumber) {
-        this.docNumber = docNumber;
-    }
-
-    public Date getDocDate() {
-        return docDate;
-    }
-
-    public void setDocDate(Date docDate) {
-        this.docDate = docDate;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -123,16 +105,31 @@ public class User {
         this.office = office;
     }
 
-    public Doc getDoc() {
-        return doc;
+    public DocType getDocType() {
+        return docType;
     }
 
-    public void setDoc(Doc doc) {
-        this.doc = doc;
+    public void setDocType(DocType docType) {
+        this.docType = docType;
+    }
+
+    public DocDetail getDocDetail() {
+        return docDetail;
+    }
+
+    public void setDocDetail(DocDetail docDetail) {
+        this.docDetail = docDetail;
     }
 
     @Override
     public String toString() {
-        return "User{" + "firstName='" + firstName + '\'' + ", secondName='" + secondName + '\'' + ", middleName='" + middleName + '\'' + ", possition='" + possition + '\'' + ", docNumber=" + docNumber + ", docDate=" + docDate + ", phone=" + phone + ", isIdentified=" + isIdentified + '}';
+        return "User{" +
+                "firstName='" + firstName + '\'' +
+                ", secondName='" + secondName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", possition='" + possition + '\'' +
+                ", phone='" + phone + '\'' +
+                ", isIdentified=" + isIdentified +
+                '}';
     }
 }

@@ -1,7 +1,7 @@
 package ru.bellintegrator.practice.model;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "country")
@@ -21,7 +21,7 @@ public class Country {
     @JoinTable (name="country_doc",
             joinColumns=@JoinColumn (name="country_id"),
             inverseJoinColumns=@JoinColumn(name="doc_id"))
-    private List<Doc> docs;
+    private Set<DocType> docTypes;
 
     public Country() {
     }
@@ -50,13 +50,14 @@ public class Country {
         this.name = name;
     }
 
-    public List<Doc> getDocs() {
-        return docs;
+    public Set<DocType> getDocTypes() {
+        return docTypes;
     }
 
-    public void setDocs(List<Doc> docs) {
-        this.docs = docs;
+    public void setDocTypes(Set<DocType> docTypes) {
+        this.docTypes = docTypes;
     }
+
 
     @Override
     public String toString() {

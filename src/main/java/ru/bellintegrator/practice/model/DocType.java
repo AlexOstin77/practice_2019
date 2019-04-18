@@ -2,10 +2,11 @@ package ru.bellintegrator.practice.model;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "doc")
-public class Doc {
+@Table(name = "doc_type")
+public class DocType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -17,16 +18,16 @@ public class Doc {
     @Column(name = "name", length = 250)
     private String name;
 
-    @OneToMany(mappedBy = "doc", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "docType", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> users;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="country_doc",
-            joinColumns=@JoinColumn(name="doc_id"),
+            joinColumns=@JoinColumn(name="doc_type_id"),
             inverseJoinColumns=@JoinColumn(name="country_id"))
-    private List<Country> countries;
+    private Set<Country> countries;
 
-    public Doc() {
+    public DocType() {
     }
 
     public Integer getId() {
@@ -53,21 +54,21 @@ public class Doc {
         this.name = name;
     }
 
-    public List<Country> getCountries() {
+    public Set<Country> getCountries() {
         return countries;
     }
 
-    public void setCountries(List<Country> countries) {
+    public void setCountries(Set<Country> countries) {
         this.countries = countries;
     }
 
     public void addUser(User user) {
         getUsers().add(user);
-        user.setDoc(this);
+        user.setDocType(this);
     }
     public void removeUser(User user) {
         getUsers().remove(user);
-        user.setDoc(null);
+        user.setDocType(null);
     }
 
     public List<User> getUsers() {
@@ -80,6 +81,6 @@ public class Doc {
 
     @Override
     public String toString() {
-        return "Doc{" + "id=" + id + ", code=" + code + ", name='" + name + '\'' + ", countries=" + countries + '}';
+        return "DocType{" + "id=" + id + ", code=" + code + ", name='" + name + '\'' + ", countries=" + countries + '}';
     }
 }

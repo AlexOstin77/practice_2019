@@ -32,12 +32,12 @@ CONSTRAINT Organization_FKEY FOREIGN KEY(org_id) REFERENCES PUBLIC.Organization 
     CREATE INDEX IX_OFFICE_NAME ON office(name);
     CREATE INDEX IX_OFFICE_PHONE ON office(phone);
 
-CREATE TABLE IF NOT EXISTS doc (
+CREATE TABLE IF NOT EXISTS doc_type (
     id          INTEGER  PRIMARY KEY AUTO_INCREMENT,
     version     INTEGER NOT NULL,
     code        VARCHAR(20) NOT NULL,
     name        VARCHAR(250) NOT NULL,
-    CONSTRAINT PK_DOC_ID PRIMARY KEY (id)
+    CONSTRAINT PK_DOC_TYPE_ID PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS country (
@@ -48,17 +48,6 @@ CREATE TABLE IF NOT EXISTS country (
     CONSTRAINT PK_COUNTRY_ID PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS country_doc (
-    id          INTEGER  PRIMARY KEY AUTO_INCREMENT,
-    version     INTEGER NOT NULL,
-    country_id  INTEGER  NOT NULL,
-    doc_id      INTEGER  NOT NULL,
-    CONSTRAINT FK_COUNTRY_ID FOREIGN KEY (country_id)
-    REFERENCES country (id),
-    CONSTRAINT FK_DOC_ID FOREIGN KEY (doc_id)
-    REFERENCES doc(id)
-);
-
 CREATE TABLE IF NOT EXISTS user (
   id               INTEGER  PRIMARY KEY AUTO_INCREMENT,
   version          INTEGER NOT NULL,
@@ -66,20 +55,27 @@ CREATE TABLE IF NOT EXISTS user (
   middle_name      VARCHAR(50),
   second_name      VARCHAR(50),
   possition        VARCHAR(50) NOT NULL,
-  doc_number       VARCHAR(20),
-  doc_date         DATE,
   phone            VARCHAR(20),
   is_identified    BOOLEAN,
   office_id        INTEGER  NOT NULL,
-  doc_id           INTEGER  NOT NULL,
+  doc_type_id      INTEGER  NOT NULL,
   CONSTRAINT office_FKEY FOREIGN KEY(office_id) REFERENCES PUBLIC.office (id),
-  CONSTRAINT doc_FKEY FOREIGN KEY(doc_id) REFERENCES PUBLIC.doc (id)
+  CONSTRAINT doc_type_FKEY FOREIGN KEY(doc_type_id) REFERENCES PUBLIC.doc_type (id)
 );
 
     CREATE INDEX UX_USER_ID ON user(id);
     CREATE INDEX UX_USER_OFFICE_ID ON user(id);
-    CREATE INDEX UX_USER_DOC_ID ON user(id);
+    CREATE INDEX UX_USER_DOC_TYPY_ID ON user(id);
     CREATE INDEX IX_USER_FIRST_NAME ON user(first_name);
     CREATE INDEX IX_USER_MIDDLE_NAME ON user(middle_name);
     CREATE INDEX IX_USER_SECOND_NAME ON user(second_name);
     CREATE INDEX IX_USER_POSSITION ON user(possition);
+
+CREATE TABLE IF NOT EXISTS doc_detail (
+  id               INTEGER  PRIMARY KEY AUTO_INCREMENT,
+  version          INTEGER NOT NULL,
+  doc_number       VARCHAR(20),
+  doc_date         DATE,
+  user_id          INTEGER  NOT NULL,
+  CONSTRAINT user_FKEY FOREIGN KEY(user_id) REFERENCES PUBLIC.user (id)
+);
