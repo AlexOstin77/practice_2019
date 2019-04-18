@@ -21,7 +21,7 @@ public class Country {
     @JoinTable (name="country_doc",
             joinColumns=@JoinColumn (name="country_id"),
             inverseJoinColumns=@JoinColumn(name="doc_id"))
-    private Set<DocType> docTypes;
+    private Set<Document> documents;
 
     public Country() {
     }
@@ -50,12 +50,12 @@ public class Country {
         this.name = name;
     }
 
-    public Set<DocType> getDocTypes() {
-        return docTypes;
+    public Set<Document> getDocuments() {
+        return documents;
     }
 
-    public void setDocTypes(Set<DocType> docTypes) {
-        this.docTypes = docTypes;
+    public void setDocuments(Set<Document> documents) {
+        this.documents = documents;
     }
 
 

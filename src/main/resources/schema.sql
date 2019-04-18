@@ -32,12 +32,12 @@ CONSTRAINT Organization_FKEY FOREIGN KEY(org_id) REFERENCES PUBLIC.Organization 
     CREATE INDEX IX_OFFICE_NAME ON office(name);
     CREATE INDEX IX_OFFICE_PHONE ON office(phone);
 
-CREATE TABLE IF NOT EXISTS doc_type (
+CREATE TABLE IF NOT EXISTS document (
     id          INTEGER  PRIMARY KEY AUTO_INCREMENT,
     version     INTEGER NOT NULL,
     code        VARCHAR(20) NOT NULL,
     name        VARCHAR(250) NOT NULL,
-    CONSTRAINT PK_DOC_TYPE_ID PRIMARY KEY (id)
+    CONSTRAINT PK_DOCUMENT_ID PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS country (
@@ -58,9 +58,9 @@ CREATE TABLE IF NOT EXISTS user (
   phone            VARCHAR(20),
   is_identified    BOOLEAN,
   office_id        INTEGER  NOT NULL,
-  doc_type_id      INTEGER  NOT NULL,
+  document_id      INTEGER  NOT NULL,
   CONSTRAINT office_FKEY FOREIGN KEY(office_id) REFERENCES PUBLIC.office (id),
-  CONSTRAINT doc_type_FKEY FOREIGN KEY(doc_type_id) REFERENCES PUBLIC.doc_type (id)
+  CONSTRAINT document_FKEY FOREIGN KEY(document_id) REFERENCES PUBLIC.document (id)
 );
 
     CREATE INDEX UX_USER_ID ON user(id);
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS user (
     CREATE INDEX IX_USER_SECOND_NAME ON user(second_name);
     CREATE INDEX IX_USER_POSSITION ON user(possition);
 
-CREATE TABLE IF NOT EXISTS doc_detail (
+CREATE TABLE IF NOT EXISTS doc_type (
   id               INTEGER  PRIMARY KEY AUTO_INCREMENT,
   version          INTEGER NOT NULL,
   doc_number       VARCHAR(20),
