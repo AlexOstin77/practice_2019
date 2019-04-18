@@ -1,11 +1,11 @@
 package ru.bellintegrator.practice.model;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "doc_detail")
+@Table(name = "doc_type")
 public class DocType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,38 +13,55 @@ public class DocType {
     @Version
     @Column(name = "version")
     private Integer version;
-    @Column(name = "doc_number", length = 20)
-    private String docNumber;
-    @Column(name = "doc_date")
-    private Date docDate;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @Column(name = "code", length = 20)
+    private String code;
+    @Column(name = "name", length = 250)
+    private String name;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name="country_doc",
+            joinColumns=@JoinColumn(name="doc_type_id"),
+            inverseJoinColumns=@JoinColumn(name="country_id"))
+    private Set<Country> countries;
 
     public DocType() {
     }
 
-    public String getDocNumber() {
-        return docNumber;
+    public Integer getId() {
+        return id;
     }
 
-    public void setDocNumber(String docNumber) {
-        this.docNumber = docNumber;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public Date getDocDate() {
-        return docDate;
+    public String getCode() {
+        return code;
     }
 
-    public void setDocDate(Date docDate) {
-        this.docDate = docDate;
+    public void setCode(String code) {
+        this.code = code;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<Country> getCountries() {
+        return countries;
+    }
+
+    public void setCountries(Set<Country> countries) {
+        this.countries = countries;
+    }
+
 
     @Override
     public String toString() {
-        return "DocType{" +
-                "docNumber='" + docNumber + '\'' +
-                ", docDate=" + docDate +
-                '}';
+        return "DocType{" + "id=" + id + ", code=" + code + ", name='" + name + '\'' + ", countries=" + countries + '}';
     }
 }

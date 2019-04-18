@@ -1,6 +1,7 @@
 package ru.bellintegrator.practice.model;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,6 +17,9 @@ public class Country {
     private String code;
     @Column(name = "name", length = 50)
     private String name;
+
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<User> users;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable (name="country_doc",
@@ -58,6 +62,23 @@ public class Country {
         this.documents = documents;
     }
 
+
+    public void addUser(User user) {
+        getUsers().add(user);
+        user.setCountry(this);
+    }
+    public void removeUser(User user) {
+        getUsers().remove(user);
+        user.setCountry(null);
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 
     @Override
     public String toString() {
