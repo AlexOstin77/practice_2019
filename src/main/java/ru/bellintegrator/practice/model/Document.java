@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "doc_detail")
-public class DocDetail {
+public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -21,7 +21,7 @@ public class DocDetail {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    public DocDetail() {
+    public Document() {
     }
 
     public String getDocNumber() {
@@ -42,7 +42,7 @@ public class DocDetail {
 
     @Override
     public String toString() {
-        return "DocDetail{" +
+        return "Document{" +
                 "docNumber='" + docNumber + '\'' +
                 ", docDate=" + docDate +
                 '}';

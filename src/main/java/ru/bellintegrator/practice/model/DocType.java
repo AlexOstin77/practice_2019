@@ -18,9 +18,6 @@ public class DocType {
     @Column(name = "name", length = 250)
     private String name;
 
-    @OneToMany(mappedBy = "docType", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> users;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="country_doc",
             joinColumns=@JoinColumn(name="doc_type_id"),
@@ -62,22 +59,6 @@ public class DocType {
         this.countries = countries;
     }
 
-    public void addUser(User user) {
-        getUsers().add(user);
-        user.setDocType(this);
-    }
-    public void removeUser(User user) {
-        getUsers().remove(user);
-        user.setDocType(null);
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
 
     @Override
     public String toString() {

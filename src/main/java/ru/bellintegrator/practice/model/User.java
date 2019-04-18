@@ -28,15 +28,15 @@ public class User {
     private Boolean isIdentified;
 
     @OneToOne(cascade = CascadeType.ALL)
-    private DocDetail docDetail;
+    private Document document;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id")
     private Office office;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doc_type_id")
-    private DocType docType;
+    @JoinColumn(name = "country_id")
+    private Country country;
 
     public User() {
     }
@@ -105,21 +105,14 @@ public class User {
         this.office = office;
     }
 
-    public DocType getDocType() {
-        return docType;
+    public Country getCountry() {
+        return country;
     }
 
-    public void setDocType(DocType docType) {
-        this.docType = docType;
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
-    public DocDetail getDocDetail() {
-        return docDetail;
-    }
-
-    public void setDocDetail(DocDetail docDetail) {
-        this.docDetail = docDetail;
-    }
 
     @Override
     public String toString() {
