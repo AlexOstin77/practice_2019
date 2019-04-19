@@ -60,6 +60,16 @@ public class DocType {
     }
 
 
+    public void addCountry(Country country) {
+        countries.add(country);
+        country.getDocTypes().add(this);
+    }
+    public void removeCountry(Country country) {
+        countries.remove(country);
+        country.getDocTypes().remove(this);
+    }
+
+
     @Override
     public String toString() {
         return "DocType{" + "id=" + id + ", code=" + code + ", name='" + name + '\'' + ", countries=" + countries + '}';

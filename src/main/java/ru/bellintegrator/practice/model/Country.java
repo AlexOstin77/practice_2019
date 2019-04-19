@@ -18,24 +18,25 @@ public class Country {
     @Column(name = "name", length = 50)
     private String name;
 
-    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> users;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable (name="country_doc",
             joinColumns=@JoinColumn (name="country_id"),
-            inverseJoinColumns=@JoinColumn(name="doc_id"))
-    private Set<Document> documents;
+            inverseJoinColumns=@JoinColumn(name="doc_type_id"))
+    private Set<DocType> docTypes;
 
     public Country() {
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getVersion() {
+        return version;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public String getCode() {
@@ -54,34 +55,38 @@ public class Country {
         this.name = name;
     }
 
-    public Set<Document> getDocuments() {
-        return documents;
+    public User getUser() {
+        return user;
     }
 
-    public void setDocuments(Set<Document> documents) {
-        this.documents = documents;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-
-    public void addUser(User user) {
-        getUsers().add(user);
-        user.setCountry(this);
-    }
-    public void removeUser(User user) {
-        getUsers().remove(user);
-        user.setCountry(null);
+    public Set<DocType> getDocTypes() {
+        return docTypes;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public void setDocTypes(Set<DocType> docTypes) {
+        this.docTypes = docTypes;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void addDocType(DocType docType) {
+        docTypes.add(docType);
+        docType.getCountries().add(this);
+    }
+    public void removeDocType(DocType docType) {
+        docTypes.remove(docType);
+        docType.getCountries().remove(this);
     }
 
     @Override
     public String toString() {
-        return "Country{" + "id=" + id + ", code=" + code + ", name='" + name + '\'' + '}';
+        return "Country{" +
+                "version=" + version +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", user=" + user +
+                '}';
     }
 }

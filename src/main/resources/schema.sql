@@ -77,4 +77,5 @@ CREATE TABLE IF NOT EXISTS document (
   version          INTEGER NOT NULL,
   doc_number       VARCHAR(20),
   doc_date         DATE,
+  user_id          INTEGER,
 );

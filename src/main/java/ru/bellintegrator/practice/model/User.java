@@ -2,6 +2,7 @@ package ru.bellintegrator.practice.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -27,16 +28,16 @@ public class User {
     @Column(name = "is_identified")
     private Boolean isIdentified;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Country> countries;
+
+    @OneToOne(mappedBy= "user", fetch = FetchType.LAZY, cascade=CascadeType.ALL, optional=false)
     private Document document;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id")
     private Office office;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id")
-    private Country country;
 
     public User() {
     }
@@ -105,14 +106,30 @@ public class User {
         this.office = office;
     }
 
-    public Country getCountry() {
-        return country;
+    public List<Country> getCountries() {
+        return countries;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
+    public void setCountries(List<Country> countries) {
+        this.countries = countries;
     }
 
+    public Document getDocument() {
+        return document;
+    }
+
+    public void setDocument(Document document) {
+        this.document = document;
+    }
+
+    public void addCountry(Country country) {
+        getCountries().add(country);
+        country.setUser(this);
+    }
+    public void removeCountry(Country country) {
+        getCountries().remove(country);
+        country.setUser(null);
+    }
 
     @Override
     public String toString() {
