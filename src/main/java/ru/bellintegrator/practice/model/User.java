@@ -31,13 +31,15 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Country> countries;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DocType> docTypes;
+
     @OneToOne(mappedBy= "user", fetch = FetchType.LAZY, cascade=CascadeType.ALL, optional=false)
     private Document document;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id")
     private Office office;
-
 
     public User() {
     }

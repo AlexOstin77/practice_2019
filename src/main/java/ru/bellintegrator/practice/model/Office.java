@@ -25,7 +25,7 @@ public class Office {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "org_id")
     private Organization organization;
 

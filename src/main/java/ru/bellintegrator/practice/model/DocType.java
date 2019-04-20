@@ -18,6 +18,10 @@ public class DocType {
     @Column(name = "name", length = 250)
     private String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name="country_doc",
             joinColumns=@JoinColumn(name="doc_type_id"),

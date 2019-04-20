@@ -32,22 +32,6 @@ CONSTRAINT Organization_FKEY FOREIGN KEY(org_id) REFERENCES PUBLIC.Organization 
     CREATE INDEX IX_OFFICE_NAME ON office(name);
     CREATE INDEX IX_OFFICE_PHONE ON office(phone);
 
-CREATE TABLE IF NOT EXISTS doc_type (
-    id          INTEGER  PRIMARY KEY AUTO_INCREMENT,
-    version     INTEGER NOT NULL,
-    code        VARCHAR(20) NOT NULL,
-    name        VARCHAR(250) NOT NULL,
-    CONSTRAINT PK_DOC_TYPE_ID PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS country (
-    id          INTEGER  PRIMARY KEY AUTO_INCREMENT,
-    version     INTEGER NOT NULL,
-    code        VARCHAR(20)  NOT NULL,
-    name        VARCHAR(50)  NOT NULL,
-);
-
-    CREATE INDEX UX_COUNTRY_ID ON country(id);
 
 CREATE TABLE IF NOT EXISTS user (
   id               INTEGER  PRIMARY KEY AUTO_INCREMENT,
@@ -60,13 +44,13 @@ CREATE TABLE IF NOT EXISTS user (
   is_identified    BOOLEAN,
   office_id        INTEGER  NOT NULL,
   country_id      INTEGER  NOT NULL,
-  CONSTRAINT office_FKEY FOREIGN KEY(office_id) REFERENCES PUBLIC.office (id),
-  CONSTRAINT country_FKEY FOREIGN KEY(country_id) REFERENCES PUBLIC.country (id)
+  CONSTRAINT office_FKEY FOREIGN KEY(office_id) REFERENCES PUBLIC.office (id)
+--  CONSTRAINT country_FKEY FOREIGN KEY(country_id) REFERENCES PUBLIC.country (id)
 );
 
     CREATE INDEX UX_USER_ID ON user(id);
     CREATE INDEX UX_USER_OFFICE_ID ON user(id);
-    CREATE INDEX UX_USER_COUNTRY_ID ON country(id);
+--    CREATE INDEX UX_USER_COUNTRY_ID ON country(id);
     CREATE INDEX IX_USER_FIRST_NAME ON user(first_name);
     CREATE INDEX IX_USER_MIDDLE_NAME ON user(middle_name);
     CREATE INDEX IX_USER_SECOND_NAME ON user(second_name);
@@ -78,4 +62,32 @@ CREATE TABLE IF NOT EXISTS document (
   doc_number       VARCHAR(20),
   doc_date         DATE,
   user_id          INTEGER,
+  CONSTRAINT User1_FKEY FOREIGN KEY(user_id) REFERENCES PUBLIC.User (id)
 );
+    CREATE INDEX UX_DOCUMENT_ID ON document(id);
+    CREATE INDEX UX_DOCUMENT_USER_ID ON document(user_id);
+
+
+CREATE TABLE IF NOT EXISTS doc_type (
+    id          INTEGER  PRIMARY KEY AUTO_INCREMENT,
+    version     INTEGER NOT NULL,
+    code        VARCHAR(20) NOT NULL,
+    name        VARCHAR(250) NOT NULL,
+    user_id     INTEGER,
+    CONSTRAINT User2_FKEY FOREIGN KEY(user_id) REFERENCES PUBLIC.User (id)
+--    CONSTRAINT PK_DOC_TYPE_ID PRIMARY KEY (id)
+);
+    CREATE INDEX UX_DOC_TYPE_ID ON doc_type(id);
+    CREATE INDEX UX_DOC_TYPE_USER_ID ON doc_type(user_id);
+
+CREATE TABLE IF NOT EXISTS country (
+    id          INTEGER  PRIMARY KEY AUTO_INCREMENT,
+    version     INTEGER NOT NULL,
+    code        VARCHAR(20)  NOT NULL,
+    name        VARCHAR(50)  NOT NULL,
+    user_id     INTEGER,
+    CONSTRAINT User3_FKEY FOREIGN KEY(user_id) REFERENCES PUBLIC.User (id)
+);
+    CREATE INDEX UX_COUNTRY_ID ON country(id);
+    CREATE INDEX UX_COUNTRY_USER_ID ON country(user_id);
+
