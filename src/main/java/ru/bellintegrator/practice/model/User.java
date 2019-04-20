@@ -28,7 +28,7 @@ public class User {
     @Column(name = "is_identified")
     private Boolean isIdentified;
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Country> countries;
 
     @OneToOne(mappedBy= "user", fetch = FetchType.LAZY, cascade=CascadeType.ALL, optional=false)
