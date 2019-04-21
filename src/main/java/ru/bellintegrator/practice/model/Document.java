@@ -17,6 +17,7 @@ public class Document {
     private String docNumber;
     @Column(name = "doc_date")
     private Date docDate;
+
     @OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="user_id", nullable = false)
     private User user;

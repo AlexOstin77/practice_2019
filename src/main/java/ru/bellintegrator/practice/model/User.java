@@ -28,11 +28,14 @@ public class User {
     @Column(name = "is_identified")
     private Boolean isIdentified;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Country> countries;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id")
+    private Country country;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DocType> docTypes;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doc_type_id")
+    private DocType docType;
+
 
     @OneToOne(mappedBy= "user", fetch = FetchType.LAZY, cascade=CascadeType.ALL, optional=false)
     private Document document;
@@ -108,12 +111,20 @@ public class User {
         this.office = office;
     }
 
-    public List<Country> getCountries() {
-        return countries;
+    public Country getCountry() {
+        return country;
     }
 
-    public void setCountries(List<Country> countries) {
-        this.countries = countries;
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+    public DocType getDocType() {
+        return docType;
+    }
+
+    public void setDocType(DocType docType) {
+        this.docType = docType;
     }
 
     public Document getDocument() {
@@ -124,24 +135,20 @@ public class User {
         this.document = document;
     }
 
-    public void addCountry(Country country) {
-        getCountries().add(country);
-        country.setUser(this);
-    }
-    public void removeCountry(Country country) {
-        getCountries().remove(country);
-        country.setUser(null);
-    }
-
     @Override
     public String toString() {
         return "User{" +
-                "firstName='" + firstName + '\'' +
+                "version=" + version +
+                ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
                 ", middleName='" + middleName + '\'' +
                 ", possition='" + possition + '\'' +
                 ", phone='" + phone + '\'' +
                 ", isIdentified=" + isIdentified +
+                ", country=" + country +
+                ", docType=" + docType +
+                ", document=" + document +
+                ", office=" + office +
                 '}';
     }
 }

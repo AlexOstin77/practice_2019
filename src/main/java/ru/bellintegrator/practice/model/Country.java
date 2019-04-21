@@ -18,9 +18,10 @@ public class Country {
     @Column(name = "name", length = 50)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<User> users;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable (name="country_doc",
@@ -55,12 +56,21 @@ public class Country {
         this.name = name;
     }
 
-    public User getUser() {
-        return user;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public void addUser(User user) {
+        getUsers().add(user);
+        user.setCountry(this);
+    }
+    public void removeUser(User user) {
+        getUsers().remove(user);
+        user.setCountry(null);
     }
 
     public Set<DocType> getDocTypes() {
@@ -86,7 +96,7 @@ public class Country {
                 "version=" + version +
                 ", code='" + code + '\'' +
                 ", name='" + name + '\'' +
-                ", user=" + user +
+                ", users=" + users +
                 '}';
     }
 }
