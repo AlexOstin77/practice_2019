@@ -18,24 +18,19 @@ public class DocType {
     @Column(name = "name", length = 250)
     private String name;
 
-    @OneToMany(mappedBy = "docType", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> users;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name="country_doc",
-            joinColumns=@JoinColumn(name="doc_type_id"),
-            inverseJoinColumns=@JoinColumn(name="country_id"))
-    private Set<Country> countries;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "document_id")
+    private Document document;
 
     public DocType() {
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getVersion() {
+        return version;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public String getCode() {
@@ -54,42 +49,13 @@ public class DocType {
         this.name = name;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public Document getDocument() {
+        return document;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setDocument(Document document) {
+        this.document = document;
     }
-
-    public void addUser(User user) {
-        getUsers().add(user);
-        user.setDocType(this);
-    }
-    public void removeUser(User user) {
-        getUsers().remove(user);
-        user.setDocType(null);
-    }
-
-
-    public Set<Country> getCountries() {
-        return countries;
-    }
-
-    public void setCountries(Set<Country> countries) {
-        this.countries = countries;
-    }
-
-
-    public void addCountry(Country country) {
-        countries.add(country);
-        country.getDocTypes().add(this);
-    }
-    public void removeCountry(Country country) {
-        countries.remove(country);
-        country.getDocTypes().remove(this);
-    }
-
 
     @Override
     public String toString() {
@@ -97,8 +63,7 @@ public class DocType {
                 "version=" + version +
                 ", code='" + code + '\'' +
                 ", name='" + name + '\'' +
-                ", users=" + users +
-                ", countries=" + countries +
+                ", document=" + document +
                 '}';
     }
 }

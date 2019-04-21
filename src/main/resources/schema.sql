@@ -38,14 +38,6 @@ CREATE TABLE IF NOT EXISTS country (
 );
     CREATE INDEX UX_COUNTRY_ID ON country(id);
 
-CREATE TABLE IF NOT EXISTS doc_type (
-    id          INTEGER  PRIMARY KEY AUTO_INCREMENT,
-    version     INTEGER NOT NULL,
-    code        VARCHAR(20) NOT NULL,
-    name        VARCHAR(250) NOT NULL,
-);
-    CREATE INDEX UX_DOC_TYPE_ID ON doc_type(id);
-
 CREATE TABLE IF NOT EXISTS document (
   id               INTEGER  PRIMARY KEY AUTO_INCREMENT,
   version          INTEGER NOT NULL,
@@ -53,6 +45,17 @@ CREATE TABLE IF NOT EXISTS document (
   doc_date         DATE,
 );
     CREATE INDEX UX_DOCUMENT_ID ON document(id);
+
+CREATE TABLE IF NOT EXISTS doc_type (
+    id          INTEGER  PRIMARY KEY AUTO_INCREMENT,
+    version     INTEGER NOT NULL,
+    code        VARCHAR(20) NOT NULL,
+    name        VARCHAR(250) NOT NULL,
+    document_id INTEGER NOT NULL,
+  CONSTRAINT document_FKEY FOREIGN KEY(document_id) REFERENCES PUBLIC.document (id)
+);
+    CREATE INDEX UX_DOC_TYPE_ID ON doc_type(id);
+    CREATE INDEX UX_DOC_TYPE_DOCUMENT_ID ON doc_type(document_id);
 
 CREATE TABLE IF NOT EXISTS user (
   id               INTEGER  PRIMARY KEY AUTO_INCREMENT,
@@ -66,11 +69,9 @@ CREATE TABLE IF NOT EXISTS user (
   office_id        INTEGER  NOT NULL,
   document_id      INTEGER  NOT NULL,
   country_id       INTEGER  NOT NULL,
-  doc_type_id      INTEGER  NOT NULL,
   CONSTRAINT office_FKEY FOREIGN KEY(office_id) REFERENCES PUBLIC.office (id),
   CONSTRAINT country_FKEY FOREIGN KEY(country_id) REFERENCES PUBLIC.country (id),
-  CONSTRAINT doc_type_FKEY FOREIGN KEY(doc_type_id) REFERENCES PUBLIC.doc_type (id),
-  CONSTRAINT document_FKEY FOREIGN KEY(document_id) REFERENCES PUBLIC.document (id)
+  CONSTRAINT document2_FKEY FOREIGN KEY(document_id) REFERENCES PUBLIC.document (id)
 );
     CREATE INDEX UX_USER_ID ON user(id);
     CREATE INDEX UX_USER_OFFICE_ID ON user(id);
@@ -79,5 +80,4 @@ CREATE TABLE IF NOT EXISTS user (
     CREATE INDEX IX_USER_SECOND_NAME ON user(second_name);
     CREATE INDEX IX_USER_POSSITION ON user(possition);
     CREATE INDEX UX_USER_COUNTRY_ID ON user(country_id);
-    CREATE INDEX UX_USER_DOC_TYPE_ID ON user(doc_type_id);
     CREATE INDEX UX_USER_DOCUMENT_ID ON user(document_id);

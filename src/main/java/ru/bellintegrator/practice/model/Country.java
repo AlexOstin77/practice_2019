@@ -18,16 +18,8 @@ public class Country {
     @Column(name = "name", length = 50)
     private String name;
 
-
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> users;
-
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable (name="country_doc",
-            joinColumns=@JoinColumn (name="country_id"),
-            inverseJoinColumns=@JoinColumn(name="doc_type_id"))
-    private Set<DocType> docTypes;
 
     public Country() {
     }
@@ -71,23 +63,6 @@ public class Country {
     public void removeUser(User user) {
         getUsers().remove(user);
         user.setCountry(null);
-    }
-
-    public Set<DocType> getDocTypes() {
-        return docTypes;
-    }
-
-    public void setDocTypes(Set<DocType> docTypes) {
-        this.docTypes = docTypes;
-    }
-
-    public void addDocType(DocType docType) {
-        docTypes.add(docType);
-        docType.getCountries().add(this);
-    }
-    public void removeDocType(DocType docType) {
-        docTypes.remove(docType);
-        docType.getCountries().remove(this);
     }
 
     @Override
