@@ -29,19 +29,15 @@ public class User {
     private Boolean isIdentified;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id")
+    @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doc_type_id")
-    private DocType docType;
-
-
-    @OneToOne(mappedBy= "user", fetch = FetchType.LAZY, cascade=CascadeType.ALL, optional=false)
+    @OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="document_id", nullable = false)
     private Document document;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "office_id")
+    @JoinColumn(name = "office_id", nullable = false)
     private Office office;
 
     public User() {
@@ -119,22 +115,6 @@ public class User {
         this.country = country;
     }
 
-    public DocType getDocType() {
-        return docType;
-    }
-
-    public void setDocType(DocType docType) {
-        this.docType = docType;
-    }
-
-    public Document getDocument() {
-        return document;
-    }
-
-    public void setDocument(Document document) {
-        this.document = document;
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -146,7 +126,6 @@ public class User {
                 ", phone='" + phone + '\'' +
                 ", isIdentified=" + isIdentified +
                 ", country=" + country +
-                ", docType=" + docType +
                 ", document=" + document +
                 ", office=" + office +
                 '}';

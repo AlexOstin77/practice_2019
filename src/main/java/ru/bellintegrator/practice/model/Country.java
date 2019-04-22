@@ -18,9 +18,6 @@ public class Country {
     @Column(name = "name", length = 50)
     private String name;
 
-    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> users;
-
     public Country() {
     }
 
@@ -48,30 +45,12 @@ public class Country {
         this.name = name;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
-    public void addUser(User user) {
-        getUsers().add(user);
-        user.setCountry(this);
-    }
-    public void removeUser(User user) {
-        getUsers().remove(user);
-        user.setCountry(null);
-    }
-
     @Override
     public String toString() {
         return "Country{" +
                 "version=" + version +
                 ", code='" + code + '\'' +
                 ", name='" + name + '\'' +
-                ", users=" + users +
                 '}';
     }
 }

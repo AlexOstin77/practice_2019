@@ -33,9 +33,6 @@ public class Organization {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Office> offices;
-
     public Organization() {
     }
 
@@ -113,22 +110,17 @@ public class Organization {
         this.isActive = isActive;
     }
 
-    public void setOffice(List<Office> offices) {
-        this.offices = offices;
-    }
-
-    public void addOffice(Office office) {
-        offices.add(office);
-        office.setOrganization(this);
-    }
-
-    public void removeOffice(Office office) {
-        office.setOrganization(null);
-    }
-
-
     @Override
     public String toString() {
-        return "Organization{" + "id=" + id + ", name='" + name + '\'' + ", fullName='" + fullName + '\'' + ", inn=" + inn + ", kpp=" + kpp + ", address='" + address + '\'' + ", phone=" + phone + ", isActive=" + isActive + '}';
+        return "Organization{" +
+                "version=" + version +
+                ", name='" + name + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", inn='" + inn + '\'' +
+                ", kpp='" + kpp + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                ", isActive=" + isActive +
+                '}';
     }
 }

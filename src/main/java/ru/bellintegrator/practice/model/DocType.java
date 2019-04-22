@@ -18,9 +18,6 @@ public class DocType {
     @Column(name = "name", length = 250)
     private String name;
 
-    @OneToMany(mappedBy = "docType", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Document> document;
-
     public DocType() {
     }
 
@@ -48,30 +45,12 @@ public class DocType {
         this.name = name;
     }
 
-    public List<Document> getDocument() {
-        return document;
-    }
-
-    public void setDocument(List<Document> document) {
-        this.document = document;
-    }
-
-    public void addDocument(Document document) {
-        getDocument().add(document);
-        document.setDocType(this);
-    }
-    public void removeDocument(Document document) {
-        getDocument().remove(document);
-        document.setDocType(null);
-    }
-
     @Override
     public String toString() {
         return "DocType{" +
                 "version=" + version +
                 ", code='" + code + '\'' +
                 ", name='" + name + '\'' +
-                ", document=" + document +
                 '}';
     }
 }

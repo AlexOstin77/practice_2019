@@ -29,9 +29,6 @@ public class Office {
     @JoinColumn(name = "org_id")
     private Organization organization;
 
-    @OneToMany(mappedBy = "office", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> users;
-
     public Office() {
     }
 
@@ -83,25 +80,15 @@ public class Office {
         this.organization = organization;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
-    public void addUser(User user) {
-        getUsers().add(user);
-        user.setOffice(this);
-    }
-    public void removeUser(User user) {
-        getUsers().remove(user);
-        user.setOffice(null);
-    }
-
     @Override
     public String toString() {
-        return "Office{" + "id=" + id + ", name='" + name + '\'' + ", address='" + address + '\'' + ", phone=" + phone + ", isActive=" + isActive + ", organization=" + organization + ", users=" + users + '}';
+        return "Office{" +
+                "version=" + version +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                ", isActive=" + isActive +
+                ", organization=" + organization +
+                '}';
     }
 }
