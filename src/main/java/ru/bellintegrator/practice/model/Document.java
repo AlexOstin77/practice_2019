@@ -22,8 +22,9 @@ public class Document {
     @JoinColumn(name="user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DocType> docTypes;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "docType_id")
+    private DocType docType;
 
     public Document() {
     }
@@ -60,21 +61,12 @@ public class Document {
         this.user = user;
     }
 
-    public List<DocType> getDocTypes() {
-        return docTypes;
+    public DocType getDocType() {
+        return docType;
     }
 
-    public void setDocTypes(List<DocType> docTypes) {
-        this.docTypes = docTypes;
-    }
-
-    public void addDocType(DocType docType) {
-        getDocTypes().add(docType);
-        docType.setDocument(this);
-    }
-    public void removeDocType(DocType docType) {
-        getDocTypes().remove(docType);
-        docType.setDocument(null);
+    public void setDocType(DocType docType) {
+        this.docType = docType;
     }
 
     @Override
@@ -84,7 +76,7 @@ public class Document {
                 ", docNumber='" + docNumber + '\'' +
                 ", docDate=" + docDate +
                 ", user=" + user +
-                ", docTypes=" + docTypes +
+                ", docType=" + docType +
                 '}';
     }
 }

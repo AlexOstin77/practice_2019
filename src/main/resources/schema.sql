@@ -38,24 +38,24 @@ CREATE TABLE IF NOT EXISTS country (
 );
     CREATE INDEX UX_COUNTRY_ID ON country(id);
 
-CREATE TABLE IF NOT EXISTS document (
-  id               INTEGER  PRIMARY KEY AUTO_INCREMENT,
-  version          INTEGER NOT NULL,
-  doc_number       VARCHAR(20),
-  doc_date         DATE,
-);
-    CREATE INDEX UX_DOCUMENT_ID ON document(id);
-
 CREATE TABLE IF NOT EXISTS doc_type (
     id          INTEGER  PRIMARY KEY AUTO_INCREMENT,
     version     INTEGER NOT NULL,
     code        VARCHAR(20) NOT NULL,
     name        VARCHAR(250) NOT NULL,
-    document_id INTEGER NOT NULL,
-  CONSTRAINT document_FKEY FOREIGN KEY(document_id) REFERENCES PUBLIC.document (id)
 );
     CREATE INDEX UX_DOC_TYPE_ID ON doc_type(id);
-    CREATE INDEX UX_DOC_TYPE_DOCUMENT_ID ON doc_type(document_id);
+
+CREATE TABLE IF NOT EXISTS document (
+  id               INTEGER  PRIMARY KEY AUTO_INCREMENT,
+  version          INTEGER NOT NULL,
+  doc_number       VARCHAR(20),
+  doc_date         DATE,
+  doc_type_id      INTEGER NOT NULL,
+CONSTRAINT doc_type_FKEY FOREIGN KEY(doc_type_id) REFERENCES PUBLIC.doc_type (id)
+);
+    CREATE INDEX UX_DOCUMENT_ID ON document(id);
+    CREATE INDEX UX_DOCUMENT_DOC_TYPE_ID ON document(doc_type_id);
 
 CREATE TABLE IF NOT EXISTS user (
   id               INTEGER  PRIMARY KEY AUTO_INCREMENT,

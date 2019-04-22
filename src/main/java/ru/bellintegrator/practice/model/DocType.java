@@ -18,9 +18,8 @@ public class DocType {
     @Column(name = "name", length = 250)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "document_id")
-    private Document document;
+    @OneToMany(mappedBy = "docType", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Document> document;
 
     public DocType() {
     }
@@ -49,12 +48,21 @@ public class DocType {
         this.name = name;
     }
 
-    public Document getDocument() {
+    public List<Document> getDocument() {
         return document;
     }
 
-    public void setDocument(Document document) {
+    public void setDocument(List<Document> document) {
         this.document = document;
+    }
+
+    public void addDocument(Document document) {
+        getDocument().add(document);
+        document.setDocType(this);
+    }
+    public void removeDocument(Document document) {
+        getDocument().remove(document);
+        document.setDocType(null);
     }
 
     @Override
