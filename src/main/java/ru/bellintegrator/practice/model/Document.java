@@ -13,9 +13,9 @@ public class Document {
     @Version
     @Column(name = "version")
     private Integer version;
-    @Column(name = "doc_number", length = 20)
+    @Column(name = "number", length = 20)
     private String docNumber;
-    @Column(name = "doc_date")
+    @Column(name = "date")
     private Date docDate;
 
     @OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)

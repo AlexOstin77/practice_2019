@@ -49,8 +49,8 @@ CREATE TABLE IF NOT EXISTS doc_type (
 CREATE TABLE IF NOT EXISTS document (
   id               INTEGER  PRIMARY KEY AUTO_INCREMENT,
   version          INTEGER NOT NULL,
-  doc_number       VARCHAR(20),
-  doc_date         DATE,
+  number       VARCHAR(20),
+  date         DATE,
   doc_type_id      INTEGER NOT NULL,
 CONSTRAINT doc_type_FKEY FOREIGN KEY(doc_type_id) REFERENCES PUBLIC.doc_type (id)
 );
