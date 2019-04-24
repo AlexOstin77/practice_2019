@@ -51,6 +51,14 @@ public class User {
         this.id = id;
     }
 
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -99,20 +107,28 @@ public class User {
         isIdentified = identified;
     }
 
-    public Office getOffice() {
-        return office;
-    }
-
-    public void setOffice(Office office) {
-        this.office = office;
-    }
-
     public Country getCountry() {
         return country;
     }
 
     public void setCountry(Country country) {
         this.country = country;
+    }
+
+    public Document getDocument() {
+        return document;
+    }
+
+    public void setDocument(Document document) {
+        this.document = document;
+    }
+
+    public Office getOffice() {
+        return office;
+    }
+
+    public void setOffice(Office office) {
+        this.office = office;
     }
 
     @Override

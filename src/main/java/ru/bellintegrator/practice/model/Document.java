@@ -2,7 +2,6 @@ package ru.bellintegrator.practice.model;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "doc_detail")
@@ -14,9 +13,9 @@ public class Document {
     @Column(name = "version")
     private Integer version;
     @Column(name = "number", length = 20)
-    private String docNumber;
+    private String number;
     @Column(name = "date")
-    private Date docDate;
+    private Date date;
 
     @OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="user_id", nullable = false)
@@ -37,20 +36,20 @@ public class Document {
         this.version = version;
     }
 
-    public String getDocNumber() {
-        return docNumber;
+    public String getNumber() {
+        return number;
     }
 
-    public void setDocNumber(String docNumber) {
-        this.docNumber = docNumber;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
-    public Date getDocDate() {
-        return docDate;
+    public Date getDate() {
+        return date;
     }
 
-    public void setDocDate(Date docDate) {
-        this.docDate = docDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public User getUser() {
@@ -73,8 +72,8 @@ public class Document {
     public String toString() {
         return "Document{" +
                 "version=" + version +
-                ", docNumber='" + docNumber + '\'' +
-                ", docDate=" + docDate +
+                ", number='" + number + '\'' +
+                ", date=" + date +
                 ", user=" + user +
                 ", docType=" + docType +
                 '}';
