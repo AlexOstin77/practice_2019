@@ -29,6 +29,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RestController
 @RequestMapping(value = "/api", produces = APPLICATION_JSON_VALUE)
 public class UserControllerImpl implements UserController {
+
+    /**
+     * Логировние
+     */
     private final Logger log = LoggerFactory.getLogger(OfficeControllerImpl.class);
 
     @Override

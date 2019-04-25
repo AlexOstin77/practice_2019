@@ -6,26 +6,44 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
 
 /**
  * JSON value
  * для обновления, сохранения, поиска офиса
  *
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
 public class OfficeView {
 
+    /**
+     * Id офиса
+     */
     private String id;
 
+    /**
+     * Название офиса
+     */
     private String name;
 
+    /**
+     * Адрес офиса
+     */
     private String address;
 
+    /**
+     * Телефон офиса
+     */
     private String phone;
 
+    /**
+     * Признак верификации офиса
+     */
     private Boolean isActive;
 
+    /**
+     * Id организации
+     */
     private String orgId;
 
     public String getId() {

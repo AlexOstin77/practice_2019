@@ -10,6 +10,10 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "office")
 public class Office {
+
+    /**
+     * Id офиса
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -47,6 +51,9 @@ public class Office {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    /**
+     * Id организации
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "org_id")
     private Organization organization;

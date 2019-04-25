@@ -9,6 +9,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseError implements Response{
 
+	/**
+	 * Сообщение об ошибке
+	 */
 	private String error;
 
 	public ResponseError(String msg){

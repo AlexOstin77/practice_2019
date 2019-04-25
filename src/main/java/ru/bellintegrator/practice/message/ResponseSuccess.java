@@ -8,7 +8,15 @@ package ru.bellintegrator.practice.message;
  */
 public class ResponseSuccess implements Response {
 
+    /**
+     * Сообщение об успехе
+     */
     private String result;
+
+    /**
+     * Передаваемые данные
+     * data JSON value
+     */
     private Object data;
 
     public ResponseSuccess() {

@@ -8,31 +8,55 @@ import ru.bellintegrator.practice.model.Organization;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
 
 /**
  * JSON value
  * для обновления, сохранения, поиска организации
  *
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
 public class OrganizationView {
 
+    /**
+     * Id организации
+     */
     private String id;
 
+    /**
+     * Краткое наименование организации
+     */
     private String name;
 
+    /**
+     * Полное наименование организации
+     */
     private String fullName;
 
+    /**
+     * ИНН организации
+     */
     private String inn;
 
+    /**
+     * КПП организации
+     */
     private String kpp;
 
+    /**
+     * Адрес организации
+     */
     private String address;
 
+    /**
+     * Телефон организации
+     */
     private String phone;
 
-    public Boolean isActive;
+    /**
+     * Признак верификации организации
+     */
+    private Boolean isActive;
 
     public String getId() {
         return id;

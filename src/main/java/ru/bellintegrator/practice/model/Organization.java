@@ -1,14 +1,23 @@
 package ru.bellintegrator.practice.model;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Version;
 /**
  * Организация сотрудника
  */
 @Entity
 @Table(name = "organization")
 public class Organization {
+
+    /**
+     * Id организации
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

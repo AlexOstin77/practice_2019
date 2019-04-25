@@ -1,7 +1,18 @@
 package ru.bellintegrator.practice.model;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Version;
 
 /**
  * Сотрудники  работающие в офисах организации
@@ -9,6 +20,10 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "user")
 public class User {
+
+    /**
+     * Id сотрудника
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -58,14 +73,23 @@ public class User {
     @Column(name = "is_identified")
     private Boolean isIdentified;
 
+    /**
+     * Id страны
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = false)
-    private Country country;
+    private Country citizenshipCode;
 
+    /**
+     * Id документа
+     */
     @OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="document_id", nullable = false)
     private Document document;
 
+    /**
+     * Id офиса
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id", nullable = false)
     private Office office;
@@ -129,12 +153,12 @@ public class User {
         isIdentified = identified;
     }
 
-    public Country getCountry() {
-        return country;
+    public Country getCitizenshipCode() {
+        return citizenshipCode;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
+    public void setCitizenshipCode(Country citizenshipCode) {
+        this.citizenshipCode = citizenshipCode;
     }
 
     public Document getDocument() {
@@ -163,7 +187,7 @@ public class User {
                 ", possition='" + possition + '\'' +
                 ", phone='" + phone + '\'' +
                 ", isIdentified=" + isIdentified +
-                ", country=" + country +
+                ", citizenshipCode=" + citizenshipCode +
                 ", document=" + document +
                 ", office=" + office +
                 '}';

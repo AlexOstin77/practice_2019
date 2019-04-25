@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS country (
     code        VARCHAR(20)  NOT NULL,
     name        VARCHAR(50)  NOT NULL,
 );
-    CREATE INDEX UX_COUNTRY_ID ON country(id);
+    CREATE INDEX UX_COUNTRY_ID ON country (id);
 
 CREATE TABLE IF NOT EXISTS doc_type (
     id          INTEGER  PRIMARY KEY AUTO_INCREMENT,

@@ -3,49 +3,89 @@ package ru.bellintegrator.practice.view;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import java.util.Date;
-
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
 
 /**
  * JSON value
  * для обновления, сохранения, поиска сотрудника
  *
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
 public class UserView {
 
-    public String id;
+    /**
+     * Id сотрудника
+     */
+    private String id;
 
-    public String firstName;
+    /**
+     * Имя сотрудника
+     */
+    private String firstName;
 
-    public String secondName;
+    /**
+     * Фамилия сотрудника
+     */
+    private String secondName;
 
-    public String middleName;
+    /**
+     * Отчество сотрудника
+     */
+    private String middleName;
 
-    public String possition;
+    /**
+     * Должность сотрудника
+     */
+    private String possition;
 
-    public String phone;
+    /**
+     * Телефон сотрудника
+     */
+    private String phone;
 
-    public String docName;
+    /**
+     * Название документа
+     */
+    private String docName;
 
-    public String docCode;
+    /**
+     * Код документа
+     */
+    private String docCode;
 
-    public String docNumber;
+    /**
+     * Номер документа
+     */
+    private String docNumber;
 
-    public Date docDate;
+    /**
+     * Дата документа
+     */
+    private Date docDate;
 
-    public Integer officeId;
+    /**
+     * Id офиса
+     */
+    private Integer officeId;
 
-    public String citizenshipName;
+    /**
+     * Наименование страны
+     */
+    private String citizenshipName;
 
-    public String citizenshipCode;
+    /**
+     * Код страны
+     */
+    private String citizenshipCode;
 
-    public Boolean isIdentified;
+    /**
+     * Признак верификации сотрудника
+     */
+    private Boolean isIdentified;
 
     public UserView(String id, String firstName, String secondName, String middleName, String possition, String phone, String docName, String docCode, String docNumber, Date docDate, String citizenshipName, String citizenshipCode, Boolean isIdentified) {
         this.id = id;

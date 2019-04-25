@@ -1,7 +1,18 @@
 package ru.bellintegrator.practice.model;
 
-import javax.persistence.*;
 import java.util.Date;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Version;
 
 /**
  * Докумнт сотрудника
@@ -9,6 +20,10 @@ import java.util.Date;
 @Entity
 @Table(name = "doc_type")
 public class Document {
+
+    /**
+     * Id документа
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -32,10 +47,16 @@ public class Document {
     @Column(name = "date")
     private Date date;
 
-    @OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    /**
+     * Id сотрудника
+     */
+    @OneToOne(fetch= FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="user_id", nullable = false)
     private User user;
 
+    /**
+     * Id типа документа
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "docType_id")
     private DocType docType;
