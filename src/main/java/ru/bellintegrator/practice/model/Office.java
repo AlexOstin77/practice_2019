@@ -4,24 +4,47 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+/**
+ * Офис, место приклепления сотрудника,
+ * подчиненная структура для организации.
+ */
 @Entity
 @Table(name = "office")
-
 public class Office {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    /**
+     * Служебное поле hibernate
+     */
     @Version
     @Column(name = "version")
     private Integer version;
+
+    /**
+     * Название офиса
+     */
     @Column(name = "name", length = 50)
     @NotNull
     private String name;
+
+    /**
+     * Адрес офиса
+     */
     @Column(name = "address", length = 250)
     @NotNull
     private String address;
+
+    /**
+     * Телефон офиса
+     */
     @Column(name = "phone", length = 20)
     private String phone;
+
+    /**
+     * Признак прохождения верификации
+     */
     @Column(name = "is_active")
     private Boolean isActive;
 

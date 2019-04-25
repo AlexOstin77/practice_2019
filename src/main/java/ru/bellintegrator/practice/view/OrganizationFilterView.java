@@ -8,6 +8,12 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
+
+/**
+ * JSON value
+ * для отфильтрованного списка организации
+ *
+ */
 public class OrganizationFilterView {
 
     private String id;

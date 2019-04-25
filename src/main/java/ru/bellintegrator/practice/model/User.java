@@ -4,27 +4,58 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+/**
+ * Сотрудники  работающие в офисах организации
+ */
 @Entity
 @Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    /**
+     * Служебное поле hibernate
+     */
     @Version
     @Column(name = "version")
     private Integer version;
+
+    /**
+     * Имя сотрудника
+     */
     @Column(name = "first_name", length = 50)
     @NotNull
     private String firstName;
+
+    /**
+     * Фамилия сотрудника
+     */
     @Column(name = "second_name", length = 50)
     private String secondName;
+
+    /**
+     * Отчество сотрудника
+     */
     @Column(name = "middle_name", length = 50)
     private String middleName;
+
+    /**
+     * Должность сотрудника
+     */
     @Column(name = "possition", length = 50)
     @NotNull
     private String possition;
+
+    /**
+     * Телефон сотрудника
+     */
     @Column(name = "phone", length = 20)
     private String phone;
+
+    /**
+     * Признак прохохдения верификации сотрудника
+     */
     @Column(name = "is_identified")
     private Boolean isIdentified;
 

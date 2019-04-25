@@ -4,32 +4,67 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+/**
+ * Организация сотрудника
+ */
 @Entity
 @Table(name = "organization")
 public class Organization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    /**
+     * Служебное поле hibernate
+     */
     @Version
     @Column(name = "version")
     private Integer version;
+
+    /**
+     * Краткое наименование организации
+     */
     @Column(name = "name", length = 50)
     @NotNull
     private String name;
+
+    /**
+     * Полное наименование организации
+     */
     @Column(name = "full_name", length = 250)
     @NotNull
     private String fullName;
+
+    /**
+     * ИНН организации
+     */
     @Column(name = "inn", length = 10)
     @NotNull
     private String inn;
+
+    /**
+     * КПП организации
+     */
     @Column(name = "kpp", length = 9)
     @NotNull
     private String kpp;
+
+    /**
+     * Адрес организации
+     */
     @Column(name = "address", length = 250)
     @NotNull
     private String address;
+
+    /**
+     * Телефон организации
+     */
     @Column(name = "phone", length = 20)
     private String phone;
+
+    /**
+     * Признак прохождения верификации организации
+     */
     @Column(name = "is_active")
     private Boolean isActive;
 
