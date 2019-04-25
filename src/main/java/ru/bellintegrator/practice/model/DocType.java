@@ -1,11 +1,9 @@
 package ru.bellintegrator.practice.model;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Set;
 
 /**
- * Тип докумнта сотрудника
+ * Тип докумнта
  */
 @Entity
 @Table(name = "doc_type")
@@ -34,14 +32,6 @@ public class DocType {
     private String name;
 
     public DocType() {
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
     }
 
     public String getCode() {

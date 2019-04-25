@@ -31,9 +31,6 @@ public class UserFiltrView {
 
     public String citizenShipCode;
 
-    public UserFiltrView() {
-    }
-
     public UserFiltrView(String id, String firstName, String secondName, String middleName, String possition) {
         this.id = id;
         this.firstName = firstName;

@@ -98,9 +98,6 @@ public class OrganizationView {
         this.isActive = isActive;
     }
 
-    public OrganizationView() {
-    }
-
     public OrganizationView(String id, String name, String fullName, String inn, String kpp, String address, String phone, Boolean isActive) {
         this.id = id;
         this.name = name;

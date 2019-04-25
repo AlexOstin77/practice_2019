@@ -2,7 +2,6 @@ package ru.bellintegrator.practice.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * Офис, место приклепления сотрудника,

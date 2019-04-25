@@ -48,17 +48,6 @@ public class OrganizationFilterView {
         this.isActive = isActive;
     }
 
-    public OrganizationFilterView() {
-
-    }
-
-    public OrganizationFilterView(String id, String name, String inn, Boolean isActive) {
-        this.id = id;
-        this.name = name;
-        this.inn = inn;
-        this.isActive = isActive;
-    }
-
     public OrganizationFilterView(String id, String name, Boolean isActive) {
         this.id = id;
         this.name = name;

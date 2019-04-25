@@ -76,9 +76,6 @@ public class OfficeView {
         this.orgId = orgId;
     }
 
-    public OfficeView() {
-    }
-
     public OfficeView(String id, String name, String address, String phone, Boolean isActive) {
         this.id = id;
         this.name = name;

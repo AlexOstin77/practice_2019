@@ -47,9 +47,6 @@ public class UserView {
 
     public Boolean isIdentified;
 
-    public UserView() {
-    }
-
     public UserView(String id, String firstName, String secondName, String middleName, String possition, String phone, String docName, String docCode, String docNumber, Date docDate, String citizenshipName, String citizenshipCode, Boolean isIdentified) {
         this.id = id;
         this.firstName = firstName;

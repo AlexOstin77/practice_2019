@@ -26,9 +26,6 @@ public class OfficeFilterView {
 
     private String orgId;
 
-    public OfficeFilterView() {
-    }
-
     public OfficeFilterView(String id, String name, Boolean isActive) {
         this.id = id;
         this.name = name;

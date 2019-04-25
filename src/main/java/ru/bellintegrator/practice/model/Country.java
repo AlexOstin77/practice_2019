@@ -1,11 +1,9 @@
 package ru.bellintegrator.practice.model;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Set;
 
 /**
- * Гражданство сотрудника
+ * Страна
  */
 @Entity
 @Table(name = "country")
@@ -22,26 +20,18 @@ public class Country {
     private Integer version;
 
     /**
-     * Код граждаства
+     * Код страны
      */
     @Column(name = "code", length = 20)
     private String code;
 
     /**
-     * Наименование граждаства
+     * Наименование страны
      */
     @Column(name = "name", length = 50)
     private String name;
 
     public Country() {
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
     }
 
     public String getCode() {
