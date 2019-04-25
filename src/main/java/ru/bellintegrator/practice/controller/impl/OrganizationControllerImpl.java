@@ -14,6 +14,9 @@ import static java.lang.Boolean.TRUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+/**
+ * {@inheritDoc}
+ */
 @RestController
 @RequestMapping(value = "/api", produces = APPLICATION_JSON_VALUE)
 public class OrganizationControllerImpl implements OrganizationController {

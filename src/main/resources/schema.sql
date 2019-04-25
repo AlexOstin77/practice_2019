@@ -47,11 +47,11 @@ CREATE TABLE IF NOT EXISTS doc_type (
     CREATE INDEX UX_DOC_TYPE_ID ON doc_type(id);
 
 CREATE TABLE IF NOT EXISTS document (
-  id               INTEGER  PRIMARY KEY AUTO_INCREMENT,
-  version          INTEGER NOT NULL,
-  number       VARCHAR(20),
-  date         DATE,
-  doc_type_id      INTEGER NOT NULL,
+  id             INTEGER  PRIMARY KEY AUTO_INCREMENT,
+  version        INTEGER NOT NULL,
+  number         VARCHAR(20),
+  date           DATE,
+  doc_type_id    INTEGER NOT NULL,
 CONSTRAINT doc_type_FKEY FOREIGN KEY(doc_type_id) REFERENCES PUBLIC.doc_type (id)
 );
     CREATE INDEX UX_DOCUMENT_ID ON document(id);
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS user (
   country_id       INTEGER  NOT NULL,
   CONSTRAINT office_FKEY FOREIGN KEY(office_id) REFERENCES PUBLIC.office (id),
   CONSTRAINT country_FKEY FOREIGN KEY(country_id) REFERENCES PUBLIC.country (id),
-  CONSTRAINT document2_FKEY FOREIGN KEY(document_id) REFERENCES PUBLIC.document (id)
+  CONSTRAINT document_FKEY FOREIGN KEY(document_id) REFERENCES PUBLIC.document (id)
 );
     CREATE INDEX UX_USER_ID ON user(id);
     CREATE INDEX UX_USER_OFFICE_ID ON user(id);

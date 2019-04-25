@@ -3,17 +3,32 @@ package ru.bellintegrator.practice.model;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * Докумнт сотрудника
+ */
 @Entity
-@Table(name = "doc_detail")
+@Table(name = "doc_type")
 public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    /**
+     * Служебное поле hibernate
+     */
     @Version
     @Column(name = "version")
     private Integer version;
+
+    /**
+     * Номер документа
+     */
     @Column(name = "number", length = 20)
     private String number;
+
+    /**
+     * Дата документа
+     */
     @Column(name = "date")
     private Date date;
 

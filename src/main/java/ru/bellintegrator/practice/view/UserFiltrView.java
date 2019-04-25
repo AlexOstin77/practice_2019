@@ -2,11 +2,17 @@ package ru.bellintegrator.practice.view;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
+
+/**
+ * JSON value
+ * для отфильтрованного списка сотрудников
+ */
 public class UserFiltrView {
 
     public String id;
@@ -27,6 +33,7 @@ public class UserFiltrView {
 
     public UserFiltrView() {
     }
+
     public UserFiltrView(String id, String firstName, String secondName, String middleName, String possition) {
         this.id = id;
         this.firstName = firstName;
