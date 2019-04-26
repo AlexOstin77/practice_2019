@@ -13,9 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 
 /**
- * Докумнт сотрудника
+ * Документ
  */
 @Entity
 @Table(name = "doc_type")
@@ -33,6 +34,7 @@ public class Document {
      */
     @Version
     @Column(name = "version")
+    @NotNull
     private Integer version;
 
     /**
@@ -60,9 +62,6 @@ public class Document {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "docType_id")
     private DocType docType;
-
-    public Document() {
-    }
 
     public String getNumber() {
         return number;

@@ -1,7 +1,15 @@
 package ru.bellintegrator.practice.model;
-
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Version;
 
 /**
  * Офис, место приклепления сотрудника,
@@ -23,6 +31,7 @@ public class Office {
      */
     @Version
     @Column(name = "version")
+    @NotNull
     private Integer version;
 
     /**
@@ -57,17 +66,6 @@ public class Office {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "org_id")
     private Organization organization;
-
-    public Office() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

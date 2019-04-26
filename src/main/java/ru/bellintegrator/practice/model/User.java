@@ -33,6 +33,7 @@ public class User {
      */
     @Version
     @Column(name = "version")
+    @NotNull
     private Integer version;
 
     /**
@@ -74,36 +75,25 @@ public class User {
     private Boolean isIdentified;
 
     /**
-     * Id страны
+     * Страна
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = false)
-    private Country citizenshipCode;
+    private Country citizenship;
 
     /**
-     * Id документа
+     * Документ
      */
     @OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="document_id", nullable = false)
     private Document document;
 
     /**
-     * Id офиса
+     * Офис
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id", nullable = false)
     private Office office;
-
-    public User() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -154,11 +144,11 @@ public class User {
     }
 
     public Country getCitizenshipCode() {
-        return citizenshipCode;
+        return citizenship;
     }
 
     public void setCitizenshipCode(Country citizenshipCode) {
-        this.citizenshipCode = citizenshipCode;
+        this.citizenship = citizenshipCode;
     }
 
     public Document getDocument() {
@@ -187,7 +177,7 @@ public class User {
                 ", possition='" + possition + '\'' +
                 ", phone='" + phone + '\'' +
                 ", isIdentified=" + isIdentified +
-                ", citizenshipCode=" + citizenshipCode +
+                ", citizenshipCode=" + citizenship +
                 ", document=" + document +
                 ", office=" + office +
                 '}';

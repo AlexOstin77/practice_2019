@@ -27,6 +27,7 @@ public class Organization {
      */
     @Version
     @Column(name = "version")
+    @NotNull
     private Integer version;
 
     /**
@@ -75,17 +76,6 @@ public class Organization {
      */
     @Column(name = "is_active")
     private Boolean isActive;
-
-    public Organization() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 
 /**
  * Страна
@@ -27,6 +28,7 @@ public class Country {
      */
     @Version
     @Column(name = "version")
+    @NotNull
     private Integer version;
 
     /**
@@ -40,9 +42,6 @@ public class Country {
      */
     @Column(name = "name", length = 50)
     private String name;
-
-    public Country() {
-    }
 
     public String getCode() {
         return code;

@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 
 /**
  * Тип докумнта
@@ -27,6 +28,7 @@ public class DocType {
      */
     @Version
     @Column(name = "version")
+    @NotNull
     private Integer version;
 
     /**
@@ -40,9 +42,6 @@ public class DocType {
      */
     @Column(name = "name", length = 250)
     private String name;
-
-    public DocType() {
-    }
 
     public String getCode() {
         return code;
