@@ -50,13 +50,6 @@ public class Document {
     private Date date;
 
     /**
-     * Id сотрудника
-     */
-    @OneToOne(fetch= FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="user_id", nullable = false)
-    private User user;
-
-    /**
      * Id типа документа
      */
     @ManyToOne(fetch = FetchType.LAZY)
