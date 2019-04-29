@@ -50,13 +50,6 @@ public class Document {
     private Date date;
 
     /**
-     * Id сотрудника
-     */
-    @OneToOne(fetch= FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="user_id", nullable = false)
-    private User user;
-
-    /**
      * Id типа документа
      */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -79,14 +72,6 @@ public class Document {
         this.date = date;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public DocType getDocType() {
         return docType;
     }
@@ -101,7 +86,6 @@ public class Document {
                 "version=" + version +
                 ", number='" + number + '\'' +
                 ", date=" + date +
-                ", user=" + user +
                 ", docType=" + docType +
                 '}';
     }
