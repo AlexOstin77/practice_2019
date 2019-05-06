@@ -2,7 +2,6 @@ package ru.bellintegrator.practice.view;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
@@ -41,7 +40,10 @@ public class OfficeFilterView {
      */
     private String orgId;
 
-    public OfficeFilterView(String id, String name, Boolean isActive) {
+    public OfficeFilterView() {
+    }
+
+    public OfficeFilterView(String id, String name, boolean isActive) {
         this.id = id;
         this.name = name;
         this.isActive = isActive;

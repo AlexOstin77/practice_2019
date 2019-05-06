@@ -75,7 +75,34 @@ public class Organization {
      * Признак прохождения верификации организации
      */
     @Column(name = "is_active")
-    private Boolean isActive;
+    @NotNull
+    private boolean isActive;
+
+    public Organization() {
+    }
+
+    public Organization(String name, String fullName, String inn, String kpp, String address, String phone) {
+        this.name = name;
+        this.fullName = fullName;
+        this.inn = inn;
+        this.kpp = kpp;
+        this.address = address;
+        this.phone = phone;
+    }
+
+    public Organization(String name, String fullName, String inn, String kpp, String address, String phone, boolean isActive) {
+        this.name = name;
+        this.fullName = fullName;
+        this.inn = inn;
+        this.kpp = kpp;
+        this.address = address;
+        this.phone = phone;
+        this.isActive = isActive;
+    }
+
+    public Integer getId() {//???????????????????????????????
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -125,11 +152,11 @@ public class Organization {
         this.phone = phone;
     }
 
-    public Boolean getActive() {
+    public boolean getActive() {
         return isActive;
     }
 
-    public void setActive(Boolean isActive) {
+    public void setActive(boolean isActive) {
         this.isActive = isActive;
     }
 

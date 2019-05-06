@@ -1,4 +1,5 @@
 package ru.bellintegrator.practice.model;
+
 import javax.validation.constraints.NotNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -58,7 +59,8 @@ public class Office {
      * Признак прохождения верификации
      */
     @Column(name = "is_active")
-    private Boolean isActive;
+    @NotNull
+    private boolean isActive;
 
     /**
      * Id организации
@@ -66,6 +68,14 @@ public class Office {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "org_id")
     private Organization organization;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -91,11 +101,11 @@ public class Office {
         this.phone = phone;
     }
 
-    public Boolean getActive() {
+    public boolean getActive() {
         return isActive;
     }
 
-    public void setActive(Boolean isActive) {
+    public void setActive(boolean isActive) {
         this.isActive = isActive;
     }
 

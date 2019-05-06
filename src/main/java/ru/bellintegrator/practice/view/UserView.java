@@ -70,7 +70,7 @@ public class UserView {
     /**
      * Id офиса
      */
-    private Integer officeId;
+    private String officeId;
 
     /**
      * Наименование страны
@@ -87,20 +87,12 @@ public class UserView {
      */
     private Boolean isIdentified;
 
-    public UserView(String id, String firstName, String secondName, String middleName, String possition, String phone, String docName, String docCode, String docNumber, Date docDate, String citizenshipName, String citizenshipCode, Boolean isIdentified) {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
         this.id = id;
-        this.firstName = firstName;
-        this.secondName = secondName;
-        this.middleName = middleName;
-        this.possition = possition;
-        this.phone = phone;
-        this.docName = docName;
-        this.docCode = docCode;
-        this.docNumber = docNumber;
-        this.docDate = docDate;
-        this.citizenshipName = citizenshipName;
-        this.citizenshipCode = citizenshipCode;
-        this.isIdentified = isIdentified;
     }
 
     public String getFirstName() {
@@ -167,11 +159,11 @@ public class UserView {
         isIdentified = identified;
     }
 
-    public Integer getOfficeId() {
+    public String getOfficeId() {
         return officeId;
     }
 
-    public void setOfficeId(Integer officeId) {
+    public void setOfficeId(String officeId) {
         this.officeId = officeId;
     }
 

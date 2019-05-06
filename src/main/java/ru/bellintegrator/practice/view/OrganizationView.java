@@ -58,6 +58,17 @@ public class OrganizationView {
      */
     private Boolean isActive;
 
+    public OrganizationView() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -108,21 +119,6 @@ public class OrganizationView {
 
     public Boolean getActive() {
         return this.isActive;
-    }
-
-    public void setActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    public OrganizationView(String id, String name, String fullName, String inn, String kpp, String address, String phone, Boolean isActive) {
-        this.id = id;
-        this.name = name;
-        this.fullName = fullName;
-        this.inn = inn;
-        this.kpp = kpp;
-        this.address = address;
-        this.phone = phone;
-        this.isActive = isActive;
     }
 
     @Override

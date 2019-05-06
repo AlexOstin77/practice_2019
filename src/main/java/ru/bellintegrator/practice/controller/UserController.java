@@ -2,9 +2,9 @@ package ru.bellintegrator.practice.controller;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import ru.bellintegrator.practice.message.Response;
 import ru.bellintegrator.practice.view.UserFiltrView;
 import ru.bellintegrator.practice.view.UserView;
+import java.util.List;
 
 public interface UserController {
 
@@ -12,7 +12,7 @@ public interface UserController {
      * Выдает отфильтрованный список сотрудкиков
      * по параметрам
      * method:GET
-     * @param userFilterView
+     * @param userFiltrView
      * In (фильтр):
      * {
      *   “officeId”:””, //обязательный параметр
@@ -23,17 +23,8 @@ public interface UserController {
      *   “docCode”:””,
      *   “citizenshipCode”:””
      * }
-     * @return JSON userFiltrView value
-     * Out:
-     * {
-     *   “id”:””,
-     *   “firstName”:””,
-     *   “secondName”:””,
-     *   “middleName”:””,
-     *   “position”:””
-     * }
      */
-    Response filterUsers(@RequestBody UserFiltrView user);
+    List<UserFiltrView> filterUsers(@RequestBody UserFiltrView userFiltrView);
 
     /**
      * Поиск сотрудника по id
@@ -58,7 +49,7 @@ public interface UserController {
      *   “isIdentified”:”true”
      * }
      */
-    Response getUserById(@PathVariable("id") Integer id);
+    UserView getUserById(@PathVariable("id") String id);
 
     /**
      * Обновление значениz сотрудника
@@ -78,12 +69,8 @@ public interface UserController {
      *   “citizenshipCode”:””,
      *   “isIdentified”:”true” //пример
      * @return result
-     * Out:
-     * {
-     *     “result”:”success”
-     * }
      */
-    Response updateUser(@RequestBody UserView user);
+    void updateUser(@RequestBody UserView userView);
 
     /**
      * Добавление сотрудика
@@ -104,12 +91,7 @@ public interface UserController {
      *   “citizenshipCode”:””,
      *   “isIdentified”:”true” //пример
      * }
-     * @return result
-     * Out:
-     * {
-     *     “result”:”success”
-     * }
      */
-    Response saveUser(@RequestBody UserView user);
+    void addUser(@RequestBody UserView userView);
 
 }

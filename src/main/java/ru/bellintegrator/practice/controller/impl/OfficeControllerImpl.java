@@ -2,19 +2,16 @@ package ru.bellintegrator.practice.controller.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.bellintegrator.practice.controller.OfficeController;
-import ru.bellintegrator.practice.message.Response;
-import ru.bellintegrator.practice.message.ResponseSuccess;
+import ru.bellintegrator.practice.service.OfficeService;
 import ru.bellintegrator.practice.view.OfficeFilterView;
 import ru.bellintegrator.practice.view.OfficeView;
-import java.util.ArrayList;
 import java.util.List;
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -31,37 +28,55 @@ public class OfficeControllerImpl implements OfficeController {
      */
     private final Logger log = LoggerFactory.getLogger(OfficeControllerImpl.class);
 
+    private final OfficeService officeService;
+
+    @Autowired
+    public OfficeControllerImpl(OfficeService officeService) {
+        this.officeService = officeService;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @RequestMapping(value = "/office/list", method = {POST})
-    public Response filterOffices(@RequestBody OfficeFilterView office) {
+    public List<OfficeFilterView> filterOffices(@RequestBody OfficeFilterView office) {
         log.info("office {} " + office.toString());
-        List<OfficeFilterView> officeFilterViewList = new ArrayList<>();
-        officeFilterViewList.add(new OfficeFilterView("1", "АДМИНИСТРАЦИЯ", TRUE));
-        officeFilterViewList.add(new OfficeFilterView("2", "БУХГАЛТЕРИЯ", FALSE));
+        List<OfficeFilterView> officeFilterViewList = officeService.filterOfficeList(office);
         log.info("list {}" + officeFilterViewList.toString());
-        return new ResponseSuccess("success", officeFilterViewList);
+        return officeFilterViewList;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    @RequestMapping(value = "/office/{id}", method = {GET})
-    public Response getOfficeById(@PathVariable(value = "id") String id) {
-        OfficeView officeView = new OfficeView("1", "АДМИНИСТРАЦИЯ", "Г.ПЕНЗА УЛ. ЛЕНИНА Д.777", "84125565", TRUE);
+    @RequestMapping(value = {"/office", "/office/{id}"}, method = {GET})
+    public OfficeView getOfficeById(@PathVariable(value = "id", required = false) String id) {
+        log.info("office id{}" + id);
+        OfficeView officeView = officeService.getOfficeById(id);
         log.info("office {}" + officeView.toString());
-        return new ResponseSuccess("success", officeView);
+        return officeView;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @RequestMapping(value = "/office/update", method = {POST})
-    public Response updateOffice(@RequestBody OfficeView office) {
+    public void updateOffice(@RequestBody OfficeView office) {
         log.info("Office {} " + office.toString());
-        return new ResponseSuccess("success");
+        officeService.updateOffice(office);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @RequestMapping(value = "/office/save", method = {POST})
-    public Response addOffice(@RequestBody OfficeView office) {
+    public void addOffice(@RequestBody OfficeView office) {
         log.info("office {} " + office.toString());
-        return new ResponseSuccess("success");
+        officeService.addOffice(office);
     }
 
 }

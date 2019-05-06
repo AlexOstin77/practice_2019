@@ -2,9 +2,9 @@ package ru.bellintegrator.practice.controller;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import ru.bellintegrator.practice.message.Response;
 import ru.bellintegrator.practice.view.OfficeFilterView;
 import ru.bellintegrator.practice.view.OfficeView;
+import java.util.List;
 
 public interface OfficeController {
 
@@ -31,7 +31,7 @@ public interface OfficeController {
      *   ...
      * ]
      */
-    Response filterOffices(@RequestBody OfficeFilterView office);
+    List<OfficeFilterView> filterOffices(@RequestBody OfficeFilterView officeFilterView);
 
     /**
      * Поиск офиса по id
@@ -47,7 +47,7 @@ public interface OfficeController {
      *   “isActive”:”true”
      * }
      */
-    Response getOfficeById(@PathVariable("id") String id);
+    OfficeView getOfficeById(@PathVariable("id") String id);
 
     /**
      * Обновление значений офиса
@@ -61,13 +61,8 @@ public interface OfficeController {
      *   “phone”,””,
      *   “isActive”:”true” //пример
      * }
-     * @return result
-     * Out:
-     * {
-     *     “result”:”success”
-     * }
      */
-    Response updateOffice(@RequestBody OfficeView office);
+    void updateOffice(@RequestBody OfficeView officeView);
 
     /**
      * Добавление офиса
@@ -81,11 +76,6 @@ public interface OfficeController {
      *   “phone”,””,
      *   “isActive”:”true”
      * }
-     * @return result
-     * Out:
-     * {
-     *     “result”:”success”
-     * }
      */
-    Response addOffice(@RequestBody OfficeView office);
+    void addOffice(@RequestBody OfficeView officeView);
 }

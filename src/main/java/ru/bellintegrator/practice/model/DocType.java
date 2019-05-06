@@ -62,7 +62,8 @@ public class DocType {
     @Override
     public String toString() {
         return "DocType{" +
-                "version=" + version +
+                "id=" + id +
+                ", version=" + version +
                 ", code='" + code + '\'' +
                 ", name='" + name + '\'' +
                 '}';

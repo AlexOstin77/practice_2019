@@ -71,8 +71,8 @@ public class User {
     /**
      * Признак прохохдения верификации сотрудника
      */
-    @Column(name = "is_identified")
-    private Boolean isIdentified;
+    @Column(name = "is_identified", columnDefinition = "boolean default false")
+    private boolean isIdentified = false;
 
     /**
      * Страна
@@ -94,6 +94,22 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id", nullable = false)
     private Office office;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -135,20 +151,20 @@ public class User {
         this.phone = phone;
     }
 
-    public Boolean getIdentified() {
+    public boolean getIdentified() {
         return isIdentified;
     }
 
-    public void setIdentified(Boolean identified) {
+    public void setIdentified(boolean identified) {
         isIdentified = identified;
     }
 
-    public Country getCitizenshipCode() {
+    public Country getCitizenship() {
         return citizenship;
     }
 
-    public void setCitizenshipCode(Country citizenshipCode) {
-        this.citizenship = citizenshipCode;
+    public void setCitizenship(Country citizenship) {
+        this.citizenship = citizenship;
     }
 
     public Document getDocument() {
@@ -170,14 +186,13 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "version=" + version +
-                ", firstName='" + firstName + '\'' +
+                "firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
                 ", middleName='" + middleName + '\'' +
                 ", possition='" + possition + '\'' +
                 ", phone='" + phone + '\'' +
                 ", isIdentified=" + isIdentified +
-                ", citizenshipCode=" + citizenship +
+                ", citizenship=" + citizenship +
                 ", document=" + document +
                 ", office=" + office +
                 '}';

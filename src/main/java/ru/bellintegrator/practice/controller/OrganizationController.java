@@ -1,10 +1,13 @@
 package ru.bellintegrator.practice.controller;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.bellintegrator.practice.message.Response;
 import ru.bellintegrator.practice.view.OrganizationFilterView;
 import ru.bellintegrator.practice.view.OrganizationView;
+
+import java.util.List;
 
 public interface OrganizationController {
 
@@ -29,7 +32,7 @@ public interface OrganizationController {
      *   },..
      *   ]
      */
-    Response filterOrganizations(@RequestBody OrganizationFilterView organizationFilterView);
+    List<OrganizationFilterView> filterOrganizations(@RequestBody OrganizationFilterView organizationFilterView);
 
     /**
      * Поиск организации по id
@@ -50,7 +53,7 @@ public interface OrganizationController {
      *   “isActive”:”true”
      * }
      */
-    Response getOrganizationById(@PathVariable("id") String id) ;
+    OrganizationView getOrganizationById(@PathVariable("id") String id) ;
 
     /**
      * Обновление значений организации
@@ -67,13 +70,8 @@ public interface OrganizationController {
      *   “phone”,””,
      *   “isActive”:”true”
      * }
-     * @return result
-     * Out:
-     * {
-     *     “result”:”success”
-     * }
      */
-    Response updateOrganizaton(@RequestBody OrganizationView organizationView);
+    void updateOrganizaton(@RequestBody OrganizationView organizationView);
 
     /**
      * Добавление организации
@@ -89,12 +87,7 @@ public interface OrganizationController {
      *   “phone”,””,
      *   “isActive”:”true”
      * }
-     * @return result
-     *      * Out:
-     *      * {
-     *      *     “result”:”success”
-     *      * }
      */
-    Response addOrganization(@RequestBody OrganizationView organizationView);
+    void addOrganization(@RequestBody OrganizationView organizationView);
 
 }

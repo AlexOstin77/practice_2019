@@ -36,6 +36,13 @@ public class OrganizationFilterView {
      */
     private Boolean isActive;
 
+    public OrganizationFilterView() {
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
