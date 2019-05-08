@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
-
 /**
  * JSON value
  * для обновления, сохранения, поиска офиса
@@ -52,9 +51,6 @@ public class OfficeView {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public OfficeView() {
     }
 
     public String getName() {

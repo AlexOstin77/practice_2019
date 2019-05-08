@@ -1,59 +1,60 @@
 package ru.bellintegrator.practice.dao.impl;
 
+import com.google.common.base.Strings;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Conjunction;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.bellintegrator.practice.dao.OfficeDAO;
+import ru.bellintegrator.practice.dao.OfficeDao;
 import ru.bellintegrator.practice.model.Office;
 import ru.bellintegrator.practice.model.Organization;
-import ru.bellintegrator.practice.view.OfficeFilterView;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.List;
 
 /**
  * {@inheritDoc}
  */
 @Repository
-public class OfficeDAOImpl implements OfficeDAO {
+public class OfficeDaoImpl implements OfficeDao {
 
     private final EntityManager em;
 
     @Autowired
-    public OfficeDAOImpl(EntityManager em) {
+    public OfficeDaoImpl(EntityManager em) {
         this.em = em;
+    }
+
+    private List addRestriction(String organization, String name, String phone, Boolean active) {
+        Session session = em.unwrap(Session.class);
+        session.beginTransaction();
+        Criteria criteria = session.createCriteria(Office.class);
+        Conjunction objConjunction = Restrictions.conjunction();
+        objConjunction.add(Restrictions.eq("organization.id", Integer.valueOf(organization)));
+        if (!(Strings.isNullOrEmpty(name))) {
+            objConjunction.add(Restrictions.like("name", name, MatchMode.ANYWHERE).ignoreCase());
+        }
+        if (!(Strings.isNullOrEmpty(phone))) {
+            objConjunction.add(Restrictions.like("phone", phone, MatchMode.ANYWHERE));
+        }
+        if (active != null) {
+            objConjunction.add(Restrictions.eq("isActive", active));
+        }
+        criteria.add(objConjunction);
+        List results = criteria.list();
+        return results;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Office> filterOfficeList(OfficeFilterView officeFilterView) {
-        CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<Office> criteria = builder.createQuery(Office.class);
-        Root<Office> Office = criteria.from(Office.class);
-        if (officeFilterView.getName() != null && officeFilterView.getPhone() != null && officeFilterView.getActive() != null) {
-            criteria.where(builder.and(builder.equal(Office.get("organization").get("id"), officeFilterView.getOrgId()), builder.like(builder.lower(Office.get("name")), "%" + officeFilterView.getName().toLowerCase() + "%"), builder.like(Office.get("phone").as(String.class), "%" + String.valueOf(officeFilterView.getPhone()) + "%"), builder.equal(Office.get("isActive"), officeFilterView.getActive())));
-        } else if (officeFilterView.getName() == null && officeFilterView.getPhone() != null && officeFilterView.getActive() != null) {
-            criteria.where(builder.and(builder.equal(Office.get("organization").get("id"), officeFilterView.getOrgId()), builder.like(Office.get("phone").as(String.class), "%" + String.valueOf(officeFilterView.getPhone()) + "%"), builder.equal(Office.get("isActive"), officeFilterView.getActive())));
-        } else if (officeFilterView.getName() != null && officeFilterView.getPhone() == null && officeFilterView.getActive() != null) {
-            criteria.where(builder.and(builder.equal(Office.get("organization").get("id"), officeFilterView.getOrgId()), builder.like(builder.lower(Office.get("name")), "%" + officeFilterView.getName().toLowerCase() + "%"), builder.equal(Office.get("isActive"), officeFilterView.getActive())));
-        } else if (officeFilterView.getName() != null && officeFilterView.getPhone() != null && officeFilterView.getActive() == null) {
-            criteria.where(builder.and(builder.equal(Office.get("organization").get("id"), officeFilterView.getOrgId()), builder.like(builder.lower(Office.get("name")), "%" + officeFilterView.getName().toLowerCase() + "%"), builder.like(Office.get("phone").as(String.class), "%" + String.valueOf(officeFilterView.getPhone()) + "%")));
-        } else if (officeFilterView.getName() == null && officeFilterView.getPhone() == null && officeFilterView.getActive() != null) {
-            criteria.where(builder.and(builder.equal(Office.get("organization").get("id"), officeFilterView.getOrgId()), builder.equal(Office.get("isActive"), officeFilterView.getActive())));
-        } else if (officeFilterView.getName() == null && officeFilterView.getPhone() != null && officeFilterView.getActive() == null) {
-            criteria.where(builder.and(builder.equal(Office.get("organization").get("id"), officeFilterView.getOrgId()), builder.like(Office.get("phone").as(String.class), "%" + String.valueOf(officeFilterView.getPhone()) + "%")));
-        } else if (officeFilterView.getName() != null && officeFilterView.getPhone() == null && officeFilterView.getActive() == null) {
-            criteria.where(builder.and(builder.equal(Office.get("organization").get("id"), officeFilterView.getOrgId()), builder.like(builder.lower(Office.get("name")), "%" + officeFilterView.getName().toLowerCase() + "%")));
-        }  else if (officeFilterView.getName() == null && officeFilterView.getPhone() == null && officeFilterView.getActive() == null) {
-            criteria.where(builder.equal(Office.get("organization").get("id"), officeFilterView.getOrgId()));
-        }
-        TypedQuery<Office> query = em.createQuery(criteria);
-        return query.getResultList();
+    public List<Office> filterOfficeList(String orgId, String name, String phone, Boolean active) {
+        return addRestriction(orgId, name, phone, active);
+
     }
 
     /**
@@ -61,7 +62,7 @@ public class OfficeDAOImpl implements OfficeDAO {
      */
     @Override
     public Office loadOfficeById(Integer id) {
-            return   em.find(Office.class, id);
+        return em.find(Office.class, id);
     }
 
     /**
@@ -77,9 +78,7 @@ public class OfficeDAOImpl implements OfficeDAO {
      */
     @Override
     public Organization loadOrgById(Integer orgId) {
-        {
-            return em.find(Organization.class, orgId);
-        }
+        return em.find(Organization.class, orgId);
     }
 
 }

@@ -3,12 +3,13 @@ package ru.bellintegrator.practice.dao;
 import ru.bellintegrator.practice.model.Office;
 import ru.bellintegrator.practice.model.Organization;
 import ru.bellintegrator.practice.view.OfficeFilterView;
+
 import java.util.List;
 
 /**
  * DAO для работы с Office
  */
-public interface OfficeDAO {
+public interface OfficeDao {
 
     /**
      * Получить отфильтрованный список офисов
@@ -16,7 +17,7 @@ public interface OfficeDAO {
      * @param officeFilterView
      * @return List<Office>
      */
-    List<Office> filterOfficeList(OfficeFilterView officeFilterView);
+    List<Office> filterOfficeList(String orgId, String name, String phone, Boolean active);
 
     /**
      * Получить офис по идентификатору
@@ -25,7 +26,6 @@ public interface OfficeDAO {
      * @return Office
      */
     Office loadOfficeById(Integer id);
-
 
     /**
      * Сохранить офис
@@ -41,8 +41,6 @@ public interface OfficeDAO {
      * @return Organization
      */
     Organization loadOrgById(Integer orgId);
-
-
 
 
 }

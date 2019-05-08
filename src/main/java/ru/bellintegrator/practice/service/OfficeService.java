@@ -16,7 +16,7 @@ public interface OfficeService {
      * @param officeFilterView
      * @return List<OfficeFilterView>
      */
-    List<OfficeFilterView> filterOfficeList(OfficeFilterView office);
+    List<OfficeFilterView> filterOfficeList(OfficeFilterView officeFilterView);
 
     /**
      * Получить офис по идентификатору

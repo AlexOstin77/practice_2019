@@ -5,20 +5,27 @@ import ru.bellintegrator.practice.model.DocType;
 import ru.bellintegrator.practice.model.Office;
 import ru.bellintegrator.practice.model.User;
 import ru.bellintegrator.practice.view.UserFiltrView;
+
 import java.util.List;
 
 /**
  * DAO для работы с User
  */
-public interface UserDAO {
+public interface UserDao {
 
     /**
      * Получить отфильтрованный список сотрудников
      *
-     * @param userFiltrView
+     * @param officeId,
+     * @param firstName,
+     * @param secondName
+     * @param middleName
+     * @param possition
+     * @param docCode
+     * @param citizenshipCode
      * @return List<User>
      */
-    List<User> filterUserList(UserFiltrView userFiltrView);
+    public List<User> filterUserList(String officeId, String firstName, String secondName, String middleName, String possition, String docCode, String citizenshipCode);
 
     /**
      * Получить сотрудника по идентификатору
@@ -46,7 +53,8 @@ public interface UserDAO {
     /**
      * Получить страну по коду и наименованию
      *
-     * @param code, name
+     * @param code
+     * @param name
      * @return Counntry
      */
     Country loadCitizenshipByCodeAndName(String code, String name);
@@ -54,7 +62,8 @@ public interface UserDAO {
     /**
      * Получить тип документа по коду и наименованию
      *
-     * @param code, name
+     * @param code
+     * @param name
      * @return DocType
      */
     DocType loadDocTypeByCodeAndName(String code, String name);

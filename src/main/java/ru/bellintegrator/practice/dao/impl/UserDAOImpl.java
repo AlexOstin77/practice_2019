@@ -8,63 +8,41 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.bellintegrator.practice.dao.UserDAO;
-import ru.bellintegrator.practice.model.*;
-import ru.bellintegrator.practice.view.UserFiltrView;
+import ru.bellintegrator.practice.dao.UserDao;
+import ru.bellintegrator.practice.model.Country;
+import ru.bellintegrator.practice.model.DocType;
+import ru.bellintegrator.practice.model.Office;
+import ru.bellintegrator.practice.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 /**
  * {@inheritDoc}
  */
 @Repository
-public class UserDAOImpl implements UserDAO {
+public class UserDaoImpl implements UserDao {
 
     private final EntityManager em;
+
     @Autowired
-    public UserDAOImpl(EntityManager em) {
+    public UserDaoImpl(EntityManager em) {
         this.em = em;
     }
+
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<User> filterUserList(UserFiltrView userFiltrView) {
-        Session session = em.unwrap(Session.class);
-        session.beginTransaction();
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<User> cq = cb.createQuery(User.class);
-        Criteria userCriteria = session.createCriteria(User.class);
-        Criteria citezenshipCriteria = userCriteria.createCriteria("citizenship");
-        Criteria docTypeCriteria = userCriteria.createCriteria("document").createCriteria("docType");
-        Conjunction objConjunction = Restrictions.conjunction();
-        objConjunction.add(Restrictions.eq("office.id", Integer.valueOf(userFiltrView.getOfficeId())));
-        if (!(Strings.isNullOrEmpty(userFiltrView.getFirstName()))) {
-            objConjunction.add(Restrictions.like("firstName", userFiltrView.getFirstName(), MatchMode.ANYWHERE ).ignoreCase());
-        }
-        if (!(Strings.isNullOrEmpty(userFiltrView.getSecondName()))) {
-            objConjunction.add(Restrictions.like("secondName", userFiltrView.getSecondName(), MatchMode.ANYWHERE).ignoreCase());
-        }
-        if (!(Strings.isNullOrEmpty(userFiltrView.getMiddleName()))) {
-            objConjunction.add(Restrictions.like("middleName", userFiltrView.getMiddleName(), MatchMode.ANYWHERE ).ignoreCase());
-        }
-        if (!(Strings.isNullOrEmpty(userFiltrView.getPossition()))) {
-            objConjunction.add(Restrictions.like("possition", userFiltrView.getPossition(), MatchMode.ANYWHERE).ignoreCase());
-        }
-        if (!(Strings.isNullOrEmpty(userFiltrView.getCitizenShipCode()))) {
-            citezenshipCriteria.add(Restrictions.eq("code", userFiltrView.getCitizenShipCode()));
-        }
-        if (!(Strings.isNullOrEmpty(userFiltrView.getDocCode()))) {
-            docTypeCriteria.add(Restrictions.eq("code", userFiltrView.getDocCode()));
-        }
-        userCriteria.add(objConjunction);
-        List results = userCriteria.list();
-        session.getTransaction().commit();
-        return results;
+    public List<User> filterUserList(String officeId, String firstName, String secondName, String
+            middleName, String possition, String docCode, String citizenshipCode) {
+        String[] properties = ("office.id firstName secondName middleName possition code").split(" ");
+        return addRestriction(properties, officeId, firstName, secondName, middleName, possition, docCode, citizenshipCode);
     }
 
     /**
@@ -72,7 +50,7 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public User loadUserById(Integer id) {
-            return   em.find(User.class, id);
+        return em.find(User.class, id);
     }
 
     /**
@@ -80,7 +58,7 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public Office loadOfficeById(String id) {
-        return   em.find(Office.class, Integer.valueOf(id));
+        return em.find(Office.class, Integer.valueOf(id));
     }
 
     /**
@@ -96,12 +74,7 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public Country loadCitizenshipByCodeAndName(String code, String name) {
-        CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<Country> criteria = builder.createQuery(Country.class);
-        Root<Country> citizenship = criteria.from(Country.class);
-        criteria.where(builder.equal(citizenship.get("code"), code), builder.equal(citizenship.get("name"), name));
-        TypedQuery<Country> query = em.createQuery(criteria);
-        return query.getResultList().stream().findFirst().orElse(null);
+        return addRestriction("citizenship", code, name);
     }
 
     /**
@@ -109,11 +82,49 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public DocType loadDocTypeByCodeAndName(String code, String name) {
+        return addRestriction("docType", code, name);
+    }
+
+    private List addRestriction(String[] prop, String... args) {
+        Session session = em.unwrap(Session.class);
+        session.beginTransaction();
+        Conjunction objConjunction = Restrictions.conjunction();
+        Criteria userCriteria = session.createCriteria(User.class);
+        Criteria docTypeCriteria = userCriteria.createCriteria("document").createCriteria("docType");
+        Criteria citizenshipCriteria = userCriteria.createCriteria("citizenship");
+        objConjunction.add(Restrictions.eq(prop[0], Integer.valueOf(args[0])));
+        for (int i = 1; i < args.length - 2; i++) {
+            if (!(Strings.isNullOrEmpty(args[i]))) {
+                objConjunction.add(Restrictions.like(prop[i], args[i], MatchMode.ANYWHERE).ignoreCase());
+            }
+        }
+        userCriteria.add(objConjunction);
+        if (!(Strings.isNullOrEmpty(args[5]))) {
+            docTypeCriteria.add(Restrictions.eq(prop[5], args[5]));
+        }
+        if (!(Strings.isNullOrEmpty(args[6]))) {
+            citizenshipCriteria.add(Restrictions.eq(prop[5], args[6]));
+        }
+        List results = userCriteria.list();
+        session.getTransaction().commit();
+        return results;
+    }
+
+
+    private <T> T addRestriction(String criteriaStr, String code, String name) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<DocType> criteria = builder.createQuery(DocType.class);
-        Root<DocType> docType = criteria.from(DocType.class);
-        criteria.where(builder.equal(docType.get("code"), code), builder.equal(docType.get("name"), name));
-        TypedQuery<DocType> query = em.createQuery(criteria);
+        CriteriaQuery criteria = builder.createQuery();
+        Root<T> criteriaRoot = null;
+        if (criteriaStr.equals("citizenship")) {
+            criteria = builder.createQuery(Country.class);
+            criteriaRoot = criteria.from(Country.class);
+        }
+        if (criteriaStr.equals("docType")) {
+            criteria = builder.createQuery(DocType.class);
+            criteriaRoot = criteria.from(DocType.class);
+        }
+        criteria.where(builder.equal(criteriaRoot.get("code"), code), builder.equal(criteriaRoot.get("name"), name));
+        TypedQuery<T> query = em.createQuery(criteria);
         return query.getResultList().stream().findFirst().orElse(null);
     }
 }

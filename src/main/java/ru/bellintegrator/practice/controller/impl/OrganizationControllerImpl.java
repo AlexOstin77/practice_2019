@@ -3,14 +3,20 @@ package ru.bellintegrator.practice.controller.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.bellintegrator.practice.controller.OrganizationController;
 import ru.bellintegrator.practice.service.OrganizationService;
 import ru.bellintegrator.practice.view.OrganizationFilterView;
 import ru.bellintegrator.practice.view.OrganizationView;
+
 import java.util.List;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * {@inheritDoc}
@@ -70,7 +76,7 @@ public class OrganizationControllerImpl implements OrganizationController {
      */
     @Override
     @RequestMapping(value = "/organiazation/save", method = {POST})
-    public  void addOrganization(@RequestBody OrganizationView organization) {
+    public void addOrganization(@RequestBody OrganizationView organization) {
         log.info("save {} " + organization.toString());
         organizationService.add(organization);
     }

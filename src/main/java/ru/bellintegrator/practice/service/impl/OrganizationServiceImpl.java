@@ -4,12 +4,10 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.bellintegrator.practice.dao.OfficeDAO;
-import ru.bellintegrator.practice.dao.OrganizationDAO;
+import ru.bellintegrator.practice.dao.OfficeDao;
+import ru.bellintegrator.practice.dao.OrganizationDao;
 import ru.bellintegrator.practice.exception.CustomException;
 import ru.bellintegrator.practice.model.Organization;
 import ru.bellintegrator.practice.service.OrganizationService;
@@ -24,14 +22,13 @@ import java.util.stream.Collectors;
  * {@inheritDoc}
  */
 @Service
-@Scope(proxyMode = ScopedProxyMode.INTERFACES)
 public class OrganizationServiceImpl implements OrganizationService {
     private final Logger log = LoggerFactory.getLogger(OrganizationServiceImpl.class);
 
-    private final OrganizationDAO dao;
+    private final OrganizationDao dao;
 
     @Autowired
-    public OrganizationServiceImpl(OrganizationDAO dao, OfficeDAO daoOffice) {
+    public OrganizationServiceImpl(OrganizationDao dao, OfficeDao daoOffice) {
         this.dao = dao;
     }
 
@@ -42,13 +39,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Transactional(readOnly = true)
     public List<OrganizationFilterView> filterOrganizationList(OrganizationFilterView organizationFilterView) {
         log.info("view {} " + organizationFilterView.toString());
-        if (Strings.isNullOrEmpty(organizationFilterView.getName())) {
-            throw new CustomException("Не заполнено обязательное поле name*");
-        }
-        if (!(Strings.isNullOrEmpty(organizationFilterView.getInn())) && !(organizationFilterView.getInn().matches("^\\d{0,10}$"))) {
-            throw new CustomException(String.format("Неверное ИНН организации %s", organizationFilterView.getInn()));
-        }
-        List<Organization> all = dao.filterOrganizationList(organizationFilterView);
+        validateFilter(organizationFilterView.getName(), organizationFilterView.getInn());
+        List<Organization> all = dao.filterOrganizationList(organizationFilterView.getName(), organizationFilterView.getInn(), organizationFilterView.getActive());
         Function<Organization, OrganizationFilterView> mapOrganization = p -> {
             OrganizationFilterView view = new OrganizationFilterView();
             view.setId(String.valueOf(p.getId()));
@@ -67,13 +59,138 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Transactional(readOnly = true)
     public OrganizationView getOrganizationById(String id) {
         log.info("getId {} " + id);
+        validateId(id);
+        Organization organization = dao.loadOrganizationById(Integer.valueOf(id));
+        return setResponseToView(organization);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public void updateOrganization(OrganizationView view) {
+        log.info("view {} " + view);
+        validateViewUpdate(view);
+        Organization organization = dao.loadOrganizationById(Integer.valueOf(view.getId()));
+        organization = setResponseToModel(view, organization);
+        dao.save(organization);
+        log.info("organization {}" + organization);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public void add(OrganizationView view) {
+        log.info("view {} " + view);
+        validateViewSave(view);
+        Organization organization = new Organization();
+        organization = setResponseToModel(view, organization);
+        dao.save(organization);
+        log.info(" organization {} " + organization);
+    }
+
+    /**
+     * Проверить view фильтра организации на заполнение
+     * обязательных полей
+     * в случае ошибки вызвать собственное исключения
+     *
+     * @param name
+     * @param inn
+     */
+    private void validateFilter(String name, String inn) {
+        if (Strings.isNullOrEmpty(name)) {
+            throw new CustomException("Не заполнено обязательное поле name*");
+        }
+        if (!(Strings.isNullOrEmpty(inn)) && !(inn.matches("^\\d{0,10}$"))) {
+            throw new CustomException(String.format("Неверное ИНН организации %s", inn));
+        }
+    }
+
+    /**
+     * Проверить идентификатор
+     * на числовой тип данных
+     * в случае ошибки вызвать собственное исключения
+     *
+     * @param id
+     */
+    private void validateId(String id) {
         if (id == null) {
             throw new CustomException("Не заполнено обязательное поле Id* ");
         }
         if (!id.matches("^\\d*$")) {
             throw new CustomException(String.format("Неверное ID организации %s", id));
         }
-        Organization organization = dao.loadOrganizationById(Integer.valueOf(id));
+    }
+
+    /**
+     * Проверить view обновления организации на заполнение
+     * обязательных полей
+     * в случае ошибки вызвать собственное исключения
+     *
+     * @param view
+     */
+    private void validateViewUpdate(OrganizationView view) {
+        if (Strings.isNullOrEmpty(view.getId()) || Strings.isNullOrEmpty(view.getName())
+                || Strings.isNullOrEmpty(view.getFullName()) || Strings.isNullOrEmpty(view.getInn())
+                || Strings.isNullOrEmpty(view.getKpp()) || Strings.isNullOrEmpty(view.getAddress())
+        ) {
+            throw new CustomException("Не заполнены обязательные поля* ");
+        }
+
+    }
+
+    /**
+     * Проверить view добавления организации на заполнение
+     * обязательных полей
+     * в случае ошибки вызвать собственное исключения
+     *
+     * @param view
+     */
+    private void validateViewSave(OrganizationView view) {
+        if (Strings.isNullOrEmpty(view.getName()) || Strings.isNullOrEmpty(view.getFullName()) || Strings.isNullOrEmpty(view.getInn())
+                || Strings.isNullOrEmpty(view.getKpp()) || Strings.isNullOrEmpty(view.getAddress())
+        ) {
+            throw new CustomException("Не заполнены обязательные поля* ");
+        }
+    }
+
+    /**
+     * Проверить organization на null
+     * в случае успеха записать в модель
+     * в случае ошибки вызвать собственное исключения
+     *
+     * @param view
+     * @param organization
+     * @return Organization
+     */
+    private Organization setResponseToModel(OrganizationView view, Organization organization) {
+        if (organization == null) {
+            throw new CustomException(String.format("Не найдена организация с ID %s", view.getId()));
+        }
+        organization.setName(view.getName());
+        organization.setFullName(view.getFullName());
+        organization.setInn(view.getInn());
+        organization.setKpp(view.getKpp());
+        organization.setAddress(view.getAddress());
+        organization.setPhone(view.getPhone());
+        if (view.getActive() != null) {
+            organization.setActive(view.getActive());
+        }
+        return organization;
+    }
+
+    /**
+     * Проверить view на null
+     * в случае успеха записать в view
+     * в случае ошибки вызвать собственное исключения
+     *
+     * @param organization
+     * @return OrganizationView
+     */
+    private OrganizationView setResponseToView(Organization organization) {
         OrganizationView view = new OrganizationView();
         if (organization == null) {
             return view;
@@ -88,62 +205,6 @@ public class OrganizationServiceImpl implements OrganizationService {
             organization.setActive(view.getActive());
         }
         return view;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional
-    public void updateOrganization(OrganizationView view) {
-        if (Strings.isNullOrEmpty(view.getId()) || Strings.isNullOrEmpty(view.getName())
-                || Strings.isNullOrEmpty(view.getFullName()) || Strings.isNullOrEmpty(view.getInn())
-                || Strings.isNullOrEmpty(view.getKpp()) || Strings.isNullOrEmpty(view.getAddress())
-        ) {
-            throw new CustomException("Не заполнены обязательные поля* ");
-        }
-        Organization organization = dao.loadOrganizationById(Integer.valueOf(view.getId()));
-        if (organization == null) {
-            throw new CustomException(String.format("Не найдена организация с ID %s", view.getId()));
-        }
-        organization.setName(view.getName());
-        organization.setFullName(view.getFullName());
-        organization.setInn(view.getInn());
-        organization.setKpp(view.getKpp());
-        organization.setAddress(view.getAddress());
-        organization.setPhone(view.getPhone());
-        if (view.getActive() != null) {
-            organization.setActive(view.getActive());
-        }
-        log.info("view {} " + view);
-        dao.save(organization);
-        log.info(" organization " + organization);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional
-    public void add(OrganizationView view) {
-        log.info("view {} " + view);
-        if (Strings.isNullOrEmpty(view.getName()) || Strings.isNullOrEmpty(view.getFullName()) || Strings.isNullOrEmpty(view.getInn())
-                || Strings.isNullOrEmpty(view.getKpp()) || Strings.isNullOrEmpty(view.getAddress())
-        ) {
-            throw new CustomException("Не заполнены обязательные поля* ");
-        }
-        Organization organization = new Organization();
-        organization.setName(view.getName());
-        organization.setFullName(view.getFullName());
-        organization.setInn(view.getInn());
-        organization.setKpp(view.getKpp());
-        organization.setAddress(view.getAddress());
-        organization.setPhone(view.getPhone());
-        if (view.getActive() != null) {
-            organization.setActive(view.getActive());
-        }
-        dao.save(organization);
-        log.info(" organization {} " + organization);
     }
 
 }

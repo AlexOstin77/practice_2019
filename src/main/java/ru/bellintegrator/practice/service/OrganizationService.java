@@ -2,6 +2,7 @@ package ru.bellintegrator.practice.service;
 
 import ru.bellintegrator.practice.view.OrganizationFilterView;
 import ru.bellintegrator.practice.view.OrganizationView;
+
 import java.util.List;
 
 /**

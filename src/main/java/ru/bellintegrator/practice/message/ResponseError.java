@@ -7,22 +7,22 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * в случае ошибки
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ResponseError implements Response{
+public class ResponseError {
 
-	/**
-	 * Сообщение об ошибке
-	 */
-	private String error;
+    /**
+     * Сообщение об ошибке
+     */
+    private String error;
 
-	public ResponseError(String msg){
-		this.error = msg;
-	}
+    public ResponseError(String msg) {
+        this.error = msg;
+    }
 
-	public String getError() {
-		return error;
-	}
+    public String getError() {
+        return error;
+    }
 
-	public void setError(String error) {
-		this.error = error;
-	}
+    public void setError(String error) {
+        this.error = error;
+    }
 }

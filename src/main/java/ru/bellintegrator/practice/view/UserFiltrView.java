@@ -53,18 +53,7 @@ public class UserFiltrView {
     /**
      * Id страны
      */
-    private String citizenShipCode;
-
-    public UserFiltrView() {
-    }
-
-    public UserFiltrView(String id, String firstName, String secondName, String middleName, String possition) {
-        this.id = id;
-        this.firstName = firstName;
-        this.secondName = secondName;
-        this.middleName = middleName;
-        this.possition = possition;
-    }
+    private String citizenshipCode;
 
     public String getId() {
         return id;
@@ -76,10 +65,6 @@ public class UserFiltrView {
 
     public String getOfficeId() {
         return officeId;
-    }
-
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
     }
 
     public String getFirstName() {
@@ -118,16 +103,8 @@ public class UserFiltrView {
         return docCode;
     }
 
-    public void setDocCode(String docCode) {
-        this.docCode = docCode;
-    }
-
-    public String getCitizenShipCode() {
-        return citizenShipCode;
-    }
-
-    public void setCitizenShipCode(String citizenShipCode) {
-        this.citizenShipCode = citizenShipCode;
+    public String getCitizenshipCode() {
+        return citizenshipCode;
     }
 
     @Override
@@ -140,7 +117,7 @@ public class UserFiltrView {
                 ", middleName='" + middleName + '\'' +
                 ", possition='" + possition + '\'' +
                 ", docCode='" + docCode + '\'' +
-                ", citizenShipCode='" + citizenShipCode + '\'' +
+                ", citizenshipCode='" + citizenshipCode + '\'' +
                 '}';
     }
 }

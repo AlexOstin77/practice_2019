@@ -46,6 +46,6 @@ public interface UserService {
      *
      * @param user, userView
      */
-    void saveUser(User user, UserView userView);
+    void saveUser(UserView userView, User user);
 
 }

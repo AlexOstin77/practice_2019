@@ -10,7 +10,6 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 /**
  * JSON value
  * для отфильтрованного списка организации
- *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
@@ -35,9 +34,6 @@ public class OrganizationFilterView {
      * Признак верификации организации
      */
     private Boolean isActive;
-
-    public OrganizationFilterView() {
-    }
 
     public void setId(String id) {
         this.id = id;
@@ -64,12 +60,6 @@ public class OrganizationFilterView {
     }
 
     public void setActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    public OrganizationFilterView(String id, String name, Boolean isActive) {
-        this.id = id;
-        this.name = name;
         this.isActive = isActive;
     }
 
