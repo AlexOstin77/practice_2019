@@ -28,7 +28,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationDao dao;
 
     @Autowired
-    public OrganizationServiceImpl(OrganizationDao dao, OfficeDao daoOffice) {
+    public OrganizationServiceImpl(OrganizationDao dao) {
         this.dao = dao;
     }
 
