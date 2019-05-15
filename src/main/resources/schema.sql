@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS office (
     address     VARCHAR(250) NOT NULL,
     phone       VARCHAR(20),
     is_active   BOOLEAN,
-    org_id      INTEGER,
+    org_id      INTEGER NOT NULL,
 CONSTRAINT Organization_FKEY FOREIGN KEY(org_id) REFERENCES PUBLIC.Organization (id) ON DELETE CASCADE
 );
     CREATE INDEX UX_OFFICE_ID ON office(id);

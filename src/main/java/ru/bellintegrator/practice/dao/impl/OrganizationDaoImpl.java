@@ -1,17 +1,16 @@
 package ru.bellintegrator.practice.dao.impl;
 
 import com.google.common.base.Strings;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Conjunction;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bellintegrator.practice.dao.OrganizationDao;
 import ru.bellintegrator.practice.model.Organization;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 /**
@@ -27,29 +26,12 @@ public class OrganizationDaoImpl implements OrganizationDao {
         this.em = em;
     }
 
-    private List addRestriction(String name, String inn, Boolean active) {
-        Session session = em.unwrap(Session.class);
-        session.beginTransaction();
-        Criteria criteria = session.createCriteria(Organization.class);
-        Conjunction objConjunction = Restrictions.conjunction();
-        objConjunction.add(Restrictions.like("name", name, MatchMode.ANYWHERE).ignoreCase());
-        if (!(Strings.isNullOrEmpty(inn))) {
-            objConjunction.add(Restrictions.like("inn", inn, MatchMode.ANYWHERE));
-        }
-        if (active != null) {
-            objConjunction.add(Restrictions.eq("isActive", active));
-        }
-        criteria.add(objConjunction);
-        List results = criteria.list();
-        return results;
-    }
-
     /**
      * {@inheritDoc}
      */
     @Override
     public List<Organization> filterOrganizationList(String name, String inn, Boolean active) {
-        return addRestriction(name, inn, active);
+        return getListOrganizationsByCriteria(name, inn, active);
     }
 
     /**
@@ -68,4 +50,31 @@ public class OrganizationDaoImpl implements OrganizationDao {
         em.persist(organization);
     }
 
+    /**
+     * Найти  организацию по заданным параметрам
+     * и вернуть их список
+     *
+     * @param name
+     * @param inn
+     * @param active
+     * @return List<Organization>
+     */
+    private List<Organization> getListOrganizationsByCriteria(String name, String inn, Boolean active) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Organization> criteriaQuery = criteriaBuilder.createQuery(Organization.class);
+        Root<Organization> itemRoot = criteriaQuery.from(Organization.class);
+        Predicate criteria = criteriaBuilder.conjunction();
+        Predicate predicateForName = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("name")), "%" + name.toLowerCase() + "%");
+        criteria = criteriaBuilder.and(criteria, predicateForName);
+        if (!(Strings.isNullOrEmpty(inn))) {
+            Predicate predicateForInn = criteriaBuilder.like(itemRoot.get("inn"), "%" + inn + "%");
+            criteria = criteriaBuilder.and(criteria, predicateForInn);
+        }
+        if (active != null) {
+            Predicate predicateForActive = criteriaBuilder.equal(itemRoot.get("isActive"), active);
+            criteria = criteriaBuilder.and(criteria, predicateForActive);
+        }
+        criteriaQuery.where(criteria);
+        return em.createQuery(criteriaQuery).getResultList();
+    }
 }

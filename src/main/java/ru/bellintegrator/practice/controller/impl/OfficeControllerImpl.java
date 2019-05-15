@@ -43,9 +43,9 @@ public class OfficeControllerImpl implements OfficeController {
     @Override
     @RequestMapping(value = "/office/list", method = {POST})
     public List<OfficeFilterView> filterOffices(@RequestBody OfficeFilterView office) {
-        log.info("office {} " + office.toString());
+        log.debug("office {} ", office.toString());
         List<OfficeFilterView> officeFilterViewList = officeService.filterOfficeList(office);
-        log.info("list {}" + officeFilterViewList.toString());
+        log.debug("list {} ", officeFilterViewList.toString());
         return officeFilterViewList;
     }
 
@@ -55,9 +55,9 @@ public class OfficeControllerImpl implements OfficeController {
     @Override
     @RequestMapping(value = {"/office", "/office/{id}"}, method = {GET})
     public OfficeView getOfficeById(@PathVariable(value = "id", required = false) String id) {
-        log.info("office id{}" + id);
+        log.debug("office id{} ", id);
         OfficeView officeView = officeService.getOfficeById(id);
-        log.info("office {}" + officeView.toString());
+        log.debug("office {} ", officeView.toString());
         return officeView;
     }
 
@@ -67,7 +67,7 @@ public class OfficeControllerImpl implements OfficeController {
     @Override
     @RequestMapping(value = "/office/update", method = {POST})
     public void updateOffice(@RequestBody OfficeView office) {
-        log.info("Office {} " + office.toString());
+        log.debug("Office {} ", office.toString());
         officeService.updateOffice(office);
     }
 
@@ -77,7 +77,7 @@ public class OfficeControllerImpl implements OfficeController {
     @Override
     @RequestMapping(value = "/office/save", method = {POST})
     public void addOffice(@RequestBody OfficeView office) {
-        log.info("office {} " + office.toString());
+        log.debug("office {} ", office.toString());
         officeService.addOffice(office);
     }
 

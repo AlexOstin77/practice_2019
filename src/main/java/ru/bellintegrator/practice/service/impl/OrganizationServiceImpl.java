@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.bellintegrator.practice.dao.OfficeDao;
 import ru.bellintegrator.practice.dao.OrganizationDao;
 import ru.bellintegrator.practice.exception.CustomException;
 import ru.bellintegrator.practice.model.Organization;
@@ -38,7 +37,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     @Transactional(readOnly = true)
     public List<OrganizationFilterView> filterOrganizationList(OrganizationFilterView organizationFilterView) {
-        log.info("view {} " + organizationFilterView.toString());
+        log.debug("view {} ", organizationFilterView.toString());
         validateFilter(organizationFilterView.getName(), organizationFilterView.getInn());
         List<Organization> all = dao.filterOrganizationList(organizationFilterView.getName(), organizationFilterView.getInn(), organizationFilterView.getActive());
         Function<Organization, OrganizationFilterView> mapOrganization = p -> {
@@ -46,7 +45,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             view.setId(String.valueOf(p.getId()));
             view.setName(p.getName());
             view.setActive(p.getActive());
-            log.info(view.toString());
+            log.debug(view.toString());
             return view;
         };
         return all.stream().map(mapOrganization).collect(Collectors.toList());
@@ -58,7 +57,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     @Transactional(readOnly = true)
     public OrganizationView getOrganizationById(String id) {
-        log.info("getId {} " + id);
+        log.debug("getId {} ", id);
         validateId(id);
         Organization organization = dao.loadOrganizationById(Integer.valueOf(id));
         return setResponseToView(organization);
@@ -70,12 +69,12 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     @Transactional
     public void updateOrganization(OrganizationView view) {
-        log.info("view {} " + view);
+        log.debug("view {} ", view);
         validateViewUpdate(view);
         Organization organization = dao.loadOrganizationById(Integer.valueOf(view.getId()));
         organization = setResponseToModel(view, organization);
         dao.save(organization);
-        log.info("organization {}" + organization);
+        log.debug("organization {} ", organization);
     }
 
     /**
@@ -84,12 +83,12 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     @Transactional
     public void add(OrganizationView view) {
-        log.info("view {} " + view);
+        log.debug("view {} ", view);
         validateViewSave(view);
         Organization organization = new Organization();
         organization = setResponseToModel(view, organization);
         dao.save(organization);
-        log.info(" organization {} " + organization);
+        log.debug(" organization {} ", organization);
     }
 
     /**
@@ -195,15 +194,14 @@ public class OrganizationServiceImpl implements OrganizationService {
         if (organization == null) {
             return view;
         }
+        view.setId(String.valueOf(organization.getId()));
         view.setName(organization.getName());
         view.setFullName(organization.getFullName());
         view.setInn(organization.getInn());
         view.setKpp(organization.getKpp());
         view.setAddress(organization.getAddress());
         view.setPhone(organization.getPhone());
-        if (view.getActive() != null) {
-            organization.setActive(view.getActive());
-        }
+        view.setActive(organization.getActive());
         return view;
     }
 

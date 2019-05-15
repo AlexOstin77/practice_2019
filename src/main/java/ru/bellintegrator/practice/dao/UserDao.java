@@ -4,7 +4,6 @@ import ru.bellintegrator.practice.model.Country;
 import ru.bellintegrator.practice.model.DocType;
 import ru.bellintegrator.practice.model.Office;
 import ru.bellintegrator.practice.model.User;
-import ru.bellintegrator.practice.view.UserFiltrView;
 
 import java.util.List;
 

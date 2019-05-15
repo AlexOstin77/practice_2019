@@ -40,10 +40,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserFiltrView> filterUserList(UserFiltrView userFiltrView) {
-        log.info("userFiltrView {} " + userFiltrView.toString());
+        log.debug("userFiltrView {} ", userFiltrView.toString());
         validateOfficeId(userFiltrView.getOfficeId());
         List<User> all = dao.filterUserList(userFiltrView.getOfficeId(), userFiltrView.getFirstName(), userFiltrView.getSecondName(), userFiltrView.getMiddleName(), userFiltrView.getPossition(), userFiltrView.getDocCode(), userFiltrView.getCitizenshipCode());
-        log.info("all {} " + all);
+        log.debug("all {} ", all);
         Function<User, UserFiltrView> mapUser = p -> {
             UserFiltrView view = new UserFiltrView();
             view.setId(String.valueOf(p.getId()));
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
             view.setSecondName(p.getSecondName());
             view.setMiddleName(p.getMiddleName());
             view.setPossition(p.getPossition());
-            log.info("list {} " + view);
+            log.debug("list {} ", view);
             return view;
         };
         return all.stream().map(mapUser).collect(Collectors.toList());
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
             office = dao.loadOfficeById("0");
         }
         user.setOffice(office);
-        log.info("office {} " + office);
+        log.debug("office {} ", office);
         saveUser(view, user);
     }
 
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
         validateOfficeId(view.getOfficeId());
         Office office = dao.loadOfficeById(view.getOfficeId());
         validateOfficeToNull(view, office);
-        log.info("office {} " + office);
+        log.debug("office {} ", office);
         User user = new User();
         user.setOffice(office);
         saveUser(view, user);
@@ -136,10 +136,10 @@ public class UserServiceImpl implements UserService {
         } else {
             citizenship = dao.loadCitizenshipByCodeAndName("", "");
         }
-        log.info("view {} " + view);
-        log.info("docType {} " + docType);
-        log.info("citizen {} " + citizenship);
-        log.info("document {} " + document);
+        log.debug("view {} ", view);
+        log.debug("docType {} ", docType);
+        log.debug("citizen {} ", citizenship);
+        log.debug("document {} ", document);
         document.setDocType(docType);
         user.setDocument(document);
         user.setCitizenship(citizenship);
@@ -154,7 +154,7 @@ public class UserServiceImpl implements UserService {
         if (view.getIdentified() != null) {
             user.setIdentified(view.getIdentified());
         }
-        log.info("user {} " + user);
+        log.debug("user {} ", user);
         dao.save(user);
     }
 
@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserService {
      * @param id
      */
     private void validateId(String id) {
-        log.info("Id  " + id);
+        log.debug("Id  " + id);
         if (Strings.isNullOrEmpty(id)) {
             throw new CustomException("Не заполнено обязательное поле Id* ");
         }
@@ -201,7 +201,7 @@ public class UserServiceImpl implements UserService {
         userView.setCitizenshipName(user.getCitizenship().getName());
         userView.setPhone(user.getPhone());
         userView.setIdentified(user.getIdentified());
-        log.info("userView {} " + userView);
+        log.debug("userView {} ", userView);
         return userView;
     }
 

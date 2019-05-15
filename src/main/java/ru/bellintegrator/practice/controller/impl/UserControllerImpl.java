@@ -44,8 +44,8 @@ public class UserControllerImpl implements UserController {
     @RequestMapping(value = "/user/list", method = {POST})
     public List<UserFiltrView> filterUsers(@RequestBody UserFiltrView userFiltrView) {
         List<UserFiltrView> userFiltrViewList = userService.filterUserList(userFiltrView);
-        log.info("userFiltrView  {}" + userFiltrView);
-        log.info("userFiltrViewList {} " + userFiltrViewList);
+        log.debug("userFiltrView  {} ", userFiltrView);
+        log.debug("userFiltrViewList {} ", userFiltrViewList);
         return userFiltrViewList;
     }
 
@@ -56,7 +56,7 @@ public class UserControllerImpl implements UserController {
     @RequestMapping(value = {"/user/", "/user/{id}"}, method = {GET})
     public UserView getUserById(@PathVariable(value = "id", required = false) String id) {
         UserView userView = userService.getUserById(id);
-        log.info("id " + id + " userView {} " + userView.toString());
+        log.debug("id " + id + " userView {} ", userView.toString());
         return userView;
     }
 
@@ -66,7 +66,7 @@ public class UserControllerImpl implements UserController {
     @Override
     @RequestMapping(value = "/user/update", method = {POST})
     public void updateUser(@RequestBody UserView user) {
-        log.info("user {} " + user);
+        log.debug("user {} ", user);
         userService.updateUser(user);
     }
 
@@ -76,7 +76,7 @@ public class UserControllerImpl implements UserController {
     @Override
     @RequestMapping(value = "/user/save", method = {POST})
     public void addUser(@RequestBody UserView user) {
-        log.info("user {} " + user);
+        log.debug("user {} ", user);
         userService.addUser(user);
     }
 }

@@ -45,8 +45,8 @@ public class OrganizationControllerImpl implements OrganizationController {
     @RequestMapping(value = "/organization/list", method = {POST})
     public List<OrganizationFilterView> filterOrganizations(@RequestBody OrganizationFilterView organization) {
         List<OrganizationFilterView> organizationFilterView = organizationService.filterOrganizationList(organization);
-        log.info("filtr {}" + organization);
-        log.info("list {}" + organizationFilterView);
+        log.debug("filtr {} ", organization);
+        log.debug("list {} ", organizationFilterView);
         return organizationFilterView;
     }
 
@@ -57,7 +57,7 @@ public class OrganizationControllerImpl implements OrganizationController {
     @RequestMapping(value = {"/organization", "/organization/{id}"}, method = {GET})
     public OrganizationView getOrganizationById(@PathVariable(value = "id", required = false) String id) {
         OrganizationView organizationView = organizationService.getOrganizationById(id);
-        log.info("organization {} " + organizationView);
+        log.debug("organization {} ", organizationView);
         return organizationView;
     }
 
@@ -67,7 +67,7 @@ public class OrganizationControllerImpl implements OrganizationController {
     @Override
     @RequestMapping(value = "/organization/update", method = {POST})
     public void updateOrganizaton(@RequestBody OrganizationView organization) {
-        log.info("update {} " + organization.toString());
+        log.debug("update {} ", organization.toString());
         organizationService.updateOrganization(organization);
     }
 
@@ -77,7 +77,7 @@ public class OrganizationControllerImpl implements OrganizationController {
     @Override
     @RequestMapping(value = "/organiazation/save", method = {POST})
     public void addOrganization(@RequestBody OrganizationView organization) {
-        log.info("save {} " + organization.toString());
+        log.debug("save {} ", organization.toString());
         organizationService.add(organization);
     }
 }

@@ -3,13 +3,14 @@ package ru.bellintegrator.practice.view;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.Objects;
+
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
 /**
  * JSON value
  * для обновления, сохранения, поиска офиса
- *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
@@ -98,5 +99,22 @@ public class OfficeView {
                 ", isActive=" + isActive +
                 ", orgId='" + orgId + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OfficeView)) return false;
+        OfficeView that = (OfficeView) o;
+        return getId().equals(that.getId()) &&
+                getName().equals(that.getName()) &&
+                getAddress().equals(that.getAddress()) &&
+                Objects.equals(getPhone(), that.getPhone()) &&
+                Objects.equals(isActive, that.isActive);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getAddress(), getPhone(), isActive, getOrgId());
     }
 }

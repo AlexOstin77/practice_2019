@@ -3,6 +3,8 @@ package ru.bellintegrator.practice.view;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.Objects;
+
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 
@@ -71,5 +73,21 @@ public class OrganizationFilterView {
                 ", inn='" + inn + '\'' +
                 ", isActive=" + isActive +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OrganizationFilterView)) return false;
+        OrganizationFilterView that = (OrganizationFilterView) o;
+        return id.equals(that.id) &&
+                getName().equals(that.getName()) &&
+                Objects.equals(getInn(), that.getInn()) &&
+                isActive.equals(that.isActive);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, getName(), getInn(), isActive);
     }
 }

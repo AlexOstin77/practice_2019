@@ -1,6 +1,5 @@
 package ru.bellintegrator.practice.model;
 
-import javax.validation.constraints.NotNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 
 /**
  * Офис, место приклепления сотрудника,
@@ -59,14 +59,13 @@ public class Office {
      * Признак прохождения верификации
      */
     @Column(name = "is_active")
-    @NotNull
     private boolean isActive;
 
     /**
      * Id организации
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "org_id")
+    @JoinColumn(name = "org_id", nullable = false)
     private Organization organization;
 
     public Integer getId() {

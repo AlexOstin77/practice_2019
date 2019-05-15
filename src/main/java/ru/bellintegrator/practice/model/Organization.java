@@ -1,6 +1,5 @@
 package ru.bellintegrator.practice.model;
 
-import javax.validation.constraints.NotNull;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 
 /**
  * Организация сотрудника
@@ -76,7 +76,6 @@ public class Organization {
      * Признак прохождения верификации организации
      */
     @Column(name = "is_active")
-    @NotNull
     private boolean isActive;
 
     public Organization() {
@@ -101,7 +100,7 @@ public class Organization {
         this.isActive = isActive;
     }
 
-    public Integer getId() {//???????????????????????????????
+    public Integer getId() {
         return id;
     }
 

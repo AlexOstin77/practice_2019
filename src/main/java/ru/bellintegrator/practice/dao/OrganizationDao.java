@@ -1,7 +1,6 @@
 package ru.bellintegrator.practice.dao;
 
 import ru.bellintegrator.practice.model.Organization;
-import ru.bellintegrator.practice.view.OrganizationFilterView;
 
 import java.util.List;
 
@@ -13,7 +12,9 @@ public interface OrganizationDao {
     /**
      * Получить отфильтрованныйсписок организаций
      *
-     * @param name, inn, active
+     * @param name
+     * @param inn
+     * @param active
      * @return List<Organization>
      */
     List<Organization> filterOrganizationList(String name, String inn, Boolean active);

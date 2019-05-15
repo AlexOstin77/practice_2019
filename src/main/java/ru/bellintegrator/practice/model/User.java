@@ -1,6 +1,5 @@
 package ru.bellintegrator.practice.model;
 
-import javax.validation.constraints.NotNull;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 
 /**
  * Сотрудники  работающие в офисах организации
@@ -71,8 +71,8 @@ public class User {
     /**
      * Признак прохохдения верификации сотрудника
      */
-    @Column(name = "is_identified", columnDefinition = "boolean default false")
-    private boolean isIdentified = false;
+    @Column(name = "is_identified")
+    private boolean isIdentified;
 
     /**
      * Страна

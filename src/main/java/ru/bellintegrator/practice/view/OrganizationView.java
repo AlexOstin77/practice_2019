@@ -2,8 +2,8 @@ package ru.bellintegrator.practice.view;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import ru.bellintegrator.practice.model.Office;
-import ru.bellintegrator.practice.model.Organization;
+
+import java.util.Objects;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
@@ -12,7 +12,6 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 /**
  * JSON value
  * для обновления, сохранения, поиска организации
- *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
@@ -121,8 +120,32 @@ public class OrganizationView {
         return this.isActive;
     }
 
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
     @Override
     public String toString() {
         return "OrganizationView{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", fullName='" + fullName + '\'' + ", inn=" + inn + ", kpp=" + kpp + ", address='" + address + '\'' + ", phone=" + phone + ", isActive=" + isActive + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OrganizationView)) return false;
+        OrganizationView that = (OrganizationView) o;
+        return getId().equals(that.getId()) &&
+                getName().equals(that.getName()) &&
+                getFullName().equals(that.getFullName()) &&
+                getInn().equals(that.getInn()) &&
+                getKpp().equals(that.getKpp()) &&
+                getAddress().equals(that.getAddress()) &&
+                Objects.equals(getPhone(), that.getPhone()) &&
+                Objects.equals(isActive, that.isActive);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getFullName(), getInn(), getKpp(), getAddress(), getPhone(), isActive);
     }
 }

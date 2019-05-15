@@ -1,0 +1,7 @@
+.idea
+log
+target
+out
+*.log
+*.iml
+src\test

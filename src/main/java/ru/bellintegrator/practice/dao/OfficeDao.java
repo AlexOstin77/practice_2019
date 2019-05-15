@@ -2,7 +2,6 @@ package ru.bellintegrator.practice.dao;
 
 import ru.bellintegrator.practice.model.Office;
 import ru.bellintegrator.practice.model.Organization;
-import ru.bellintegrator.practice.view.OfficeFilterView;
 
 import java.util.List;
 
@@ -14,7 +13,10 @@ public interface OfficeDao {
     /**
      * Получить отфильтрованный список офисов
      *
-     * @param officeFilterView
+     * @param orgId
+     * @param name
+     * @param phone
+     * @param active
      * @return List<Office>
      */
     List<Office> filterOfficeList(String orgId, String name, String phone, Boolean active);

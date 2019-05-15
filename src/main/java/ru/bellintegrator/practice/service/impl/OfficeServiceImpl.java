@@ -14,7 +14,6 @@ import ru.bellintegrator.practice.service.OfficeService;
 import ru.bellintegrator.practice.view.OfficeFilterView;
 import ru.bellintegrator.practice.view.OfficeView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -40,12 +39,11 @@ public class OfficeServiceImpl implements OfficeService {
     @Override
     public List<OfficeFilterView> filterOfficeList(OfficeFilterView officeFilterView) {
         validateFilterView(officeFilterView);
-        log.info("filtrOfficeView {} " + officeFilterView.toString());
+        log.debug("filtrOfficeView {} ", officeFilterView.toString());
         List<Office> all = dao.filterOfficeList(officeFilterView.getOrgId(), officeFilterView.getName(), officeFilterView.getPhone(), officeFilterView.getActive());
-        List<OfficeFilterView> officesView = new ArrayList<>();
         Function<Office, OfficeFilterView> mapOffice = p -> {
             OfficeFilterView view = new OfficeFilterView(String.valueOf(p.getId()), p.getName(), p.getActive());
-            log.info("view {}" + view.toString());
+            log.debug("view {} ", view.toString());
             return view;
         };
         return all.stream().map(mapOffice).collect(Collectors.toList());
@@ -57,7 +55,7 @@ public class OfficeServiceImpl implements OfficeService {
     @Override
     @Transactional(readOnly = true)
     public OfficeView getOfficeById(String id) {
-        log.info("getId {} " + id);
+        log.debug("getId {} ", id);
         validateViewId(id);
         Office office = dao.loadOfficeById(Integer.valueOf(id));
         return setResponseToView(office);
@@ -69,10 +67,10 @@ public class OfficeServiceImpl implements OfficeService {
     @Override
     @Transactional
     public void updateOffice(OfficeView view) {
-        log.info("view {} " + view);
+        log.debug("view {} ", view);
         validateUpdateView(view);
         Office office = dao.loadOfficeById(Integer.valueOf(view.getId()));
-        office = setResponseToModel(view, office);
+        setResponseToModel(view, office);
         dao.save(office);
     }
 
@@ -82,12 +80,12 @@ public class OfficeServiceImpl implements OfficeService {
     @Override
     @Transactional
     public void addOffice(OfficeView view) {
-        log.info("office {} " + view);
+        log.debug("office {} ", view);
         Office office = new Office();
         validateAddView(view);
-        office = setOrganizationToOffice(view, office);
-        office = setResponseToModel(view, office);
-        log.info("office {} " + office.toString());
+        setOrganizationToOffice(view, office);
+        setResponseToModel(view, office);
+        log.debug("office {} ", office.toString());
         dao.save(office);
     }
 
@@ -161,17 +159,15 @@ public class OfficeServiceImpl implements OfficeService {
      *
      * @param view
      * @param office
-     * @return Office
      */
-    private Office setResponseToModel(OfficeView view, Office office) {
+    private void setResponseToModel(OfficeView view, Office office) {
         office.setName(view.getName());
         office.setPhone(view.getPhone());
         office.setAddress(view.getAddress());
         if (view.getActive() != null) {
             office.setActive(view.getActive());
         }
-        log.info("office {} " + office.toString());
-        return office;
+        log.debug("office {} ", office.toString());
     }
 
     /**
@@ -192,7 +188,7 @@ public class OfficeServiceImpl implements OfficeService {
         officeView.setPhone(office.getPhone());
         officeView.setAddress(office.getAddress());
         officeView.setActive(office.getActive());
-        log.info("office {} " + officeView);
+        log.debug("office {} ", officeView);
         return officeView;
     }
 
@@ -203,14 +199,12 @@ public class OfficeServiceImpl implements OfficeService {
      *
      * @param view
      * @param office
-     * @return Office
      */
-    private Office setOrganizationToOffice(OfficeView view, Office office) {
+    private void setOrganizationToOffice(OfficeView view, Office office) {
         Organization organization = dao.loadOrgById(Integer.valueOf(view.getOrgId()));
         if (organization == null) {
             throw new CustomException(String.format("Неверное ID организации %s", Integer.valueOf(view.getOrgId())));
         }
         office.setOrganization(organization);
-        return office;
     }
 }

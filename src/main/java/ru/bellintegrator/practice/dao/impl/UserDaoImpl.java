@@ -1,11 +1,6 @@
 package ru.bellintegrator.practice.dao.impl;
 
 import com.google.common.base.Strings;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Conjunction;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.bellintegrator.practice.dao.UserDao;
@@ -18,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
@@ -41,8 +37,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> filterUserList(String officeId, String firstName, String secondName, String
             middleName, String possition, String docCode, String citizenshipCode) {
-        String[] properties = ("office.id firstName secondName middleName possition code").split(" ");
-        return addRestriction(properties, officeId, firstName, secondName, middleName, possition, docCode, citizenshipCode);
+        return getListUsersByCriteria(officeId, firstName, secondName, middleName, possition, docCode, citizenshipCode);
     }
 
     /**
@@ -74,7 +69,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public Country loadCitizenshipByCodeAndName(String code, String name) {
-        return addRestriction("citizenship", code, name);
+        return getUniqueResultByCriteria("citizenship", code, name);
     }
 
     /**
@@ -82,36 +77,67 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public DocType loadDocTypeByCodeAndName(String code, String name) {
-        return addRestriction("docType", code, name);
+        return getUniqueResultByCriteria("docType", code, name);
     }
 
-    private List addRestriction(String[] prop, String... args) {
-        Session session = em.unwrap(Session.class);
-        session.beginTransaction();
-        Conjunction objConjunction = Restrictions.conjunction();
-        Criteria userCriteria = session.createCriteria(User.class);
-        Criteria docTypeCriteria = userCriteria.createCriteria("document").createCriteria("docType");
-        Criteria citizenshipCriteria = userCriteria.createCriteria("citizenship");
-        objConjunction.add(Restrictions.eq(prop[0], Integer.valueOf(args[0])));
-        for (int i = 1; i < args.length - 2; i++) {
-            if (!(Strings.isNullOrEmpty(args[i]))) {
-                objConjunction.add(Restrictions.like(prop[i], args[i], MatchMode.ANYWHERE).ignoreCase());
-            }
+    /**
+     * Найти сотрудников по заданным параметрам
+     * и вернуть их список
+     *
+     * @param officeId
+     * @param firstName
+     * @param secondName
+     * @param middleName
+     * @param possition
+     * @param docCode
+     * @param citizenshipCode
+     * @return List<User>
+     */
+    private List<User> getListUsersByCriteria(String officeId, String firstName, String secondName, String middleName, String possition, String docCode, String citizenshipCode) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        Root<User> itemRoot = criteriaQuery.from(User.class);
+        Predicate criteria = criteriaBuilder.conjunction();
+        Predicate predicateForOrgId = criteriaBuilder.equal(itemRoot.get("office"), Integer.valueOf(officeId));
+        criteria = criteriaBuilder.and(criteria, predicateForOrgId);
+        if (!(Strings.isNullOrEmpty(firstName))) {
+            Predicate predicateForFirstName = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("firstName")), "%" + firstName.toLowerCase() + "%");
+            criteria = criteriaBuilder.and(criteria, predicateForFirstName);
         }
-        userCriteria.add(objConjunction);
-        if (!(Strings.isNullOrEmpty(args[5]))) {
-            docTypeCriteria.add(Restrictions.eq(prop[5], args[5]));
+        if (!(Strings.isNullOrEmpty(secondName))) {
+            Predicate predicateForSecondName = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("secondName")), "%" + secondName.toLowerCase() + "%");
+            criteria = criteriaBuilder.and(criteria, predicateForSecondName);
         }
-        if (!(Strings.isNullOrEmpty(args[6]))) {
-            citizenshipCriteria.add(Restrictions.eq(prop[5], args[6]));
+        if (!(Strings.isNullOrEmpty(middleName))) {
+            Predicate predicateForMiddleName = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("secondName")), "%" + middleName.toLowerCase() + "%");
+            criteria = criteriaBuilder.and(criteria, predicateForMiddleName);
         }
-        List results = userCriteria.list();
-        session.getTransaction().commit();
-        return results;
+        if (!(Strings.isNullOrEmpty(possition))) {
+            Predicate predicateForPossition = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("possition")), "%" + possition + "%");
+            criteria = criteriaBuilder.and(criteria, predicateForPossition);
+        }
+        if (!(Strings.isNullOrEmpty(docCode))) {
+            Predicate predicateForDocCode = criteriaBuilder.equal(itemRoot.get("document").get("docType").get("code"), Integer.valueOf(docCode));
+            criteria = criteriaBuilder.and(criteria, predicateForDocCode);
+        }
+        if (!(Strings.isNullOrEmpty(citizenshipCode))) {
+            Predicate predicateForCitizenshipCodee = criteriaBuilder.equal(itemRoot.get("citizenship").get("code"), Integer.valueOf(citizenshipCode));
+            criteria = criteriaBuilder.and(criteria, predicateForCitizenshipCodee);
+        }
+        criteriaQuery.where(criteria);
+        return em.createQuery(criteriaQuery).getResultList();
     }
 
-
-    private <T> T addRestriction(String criteriaStr, String code, String name) {
+    /**
+     * Вернуть docType либо citizenshipCode по code, name
+     * Тип возращаемого значения определяется параметром criteriaStr
+     *
+     * @param criteriaStr
+     * @param code
+     * @param name
+     * @return T
+     */
+    private <T> T getUniqueResultByCriteria(String criteriaStr, String code, String name) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery criteria = builder.createQuery();
         Root<T> criteriaRoot = null;
