@@ -75,7 +75,7 @@ public class OrganizationControllerImpl implements OrganizationController {
      * {@inheritDoc}
      */
     @Override
-    @RequestMapping(value = "/organiazation/save", method = {POST})
+    @RequestMapping(value = "/organization/save", method = {POST})
     public void addOrganization(@RequestBody OrganizationView organization) {
         log.debug("save {} ", organization.toString());
         organizationService.add(organization);

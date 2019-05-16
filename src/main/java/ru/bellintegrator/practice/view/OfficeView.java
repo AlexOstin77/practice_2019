@@ -46,6 +46,10 @@ public class OfficeView {
      */
     private String orgId;
 
+    public void setOrgId(String orgId) {
+        this.orgId = orgId;
+    }
+
     public String getId() {
         return id;
     }
@@ -82,8 +86,8 @@ public class OfficeView {
         return isActive;
     }
 
-    public void setActive(Boolean IsActive) {
-        this.isActive = isActive;
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 
     public String getOrgId() {

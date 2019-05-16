@@ -58,6 +58,7 @@ public class OfficeServiceImpl implements OfficeService {
         log.debug("getId {} ", id);
         validateViewId(id);
         Office office = dao.loadOfficeById(Integer.valueOf(id));
+        log.debug("officeView {} ", office.toString());
         return setResponseToView(office);
     }
 
@@ -188,7 +189,7 @@ public class OfficeServiceImpl implements OfficeService {
         officeView.setPhone(office.getPhone());
         officeView.setAddress(office.getAddress());
         officeView.setActive(office.getActive());
-        log.debug("office {} ", officeView);
+        log.debug("officeView {} ", officeView);
         return officeView;
     }
 

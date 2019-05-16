@@ -37,6 +37,10 @@ public class OrganizationFilterView {
      */
     private Boolean isActive;
 
+    public String getId() {
+        return id;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -65,6 +69,9 @@ public class OrganizationFilterView {
         this.isActive = isActive;
     }
 
+    public OrganizationFilterView() {
+    }
+
     @Override
     public String toString() {
         return "OrganizationFilterView{" +
@@ -80,14 +87,14 @@ public class OrganizationFilterView {
         if (this == o) return true;
         if (!(o instanceof OrganizationFilterView)) return false;
         OrganizationFilterView that = (OrganizationFilterView) o;
-        return id.equals(that.id) &&
+        return Objects.equals(getId(), that.getId()) &&
                 getName().equals(that.getName()) &&
                 Objects.equals(getInn(), that.getInn()) &&
-                isActive.equals(that.isActive);
+                Objects.equals(isActive, that.isActive);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, getName(), getInn(), isActive);
+        return Objects.hash(getId(), getName(), getInn(), isActive);
     }
 }
