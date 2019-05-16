@@ -37,7 +37,38 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> filterUserList(String officeId, String firstName, String secondName, String
             middleName, String possition, String docCode, String citizenshipCode) {
-        return getListUsersByCriteria(officeId, firstName, secondName, middleName, possition, docCode, citizenshipCode);
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        Root<User> itemRoot = criteriaQuery.from(User.class);
+        Predicate criteria = criteriaBuilder.conjunction();
+        Predicate predicateForOrgId = criteriaBuilder.equal(itemRoot.get("office"), Integer.valueOf(officeId));
+        criteria = criteriaBuilder.and(criteria, predicateForOrgId);
+        if (!(Strings.isNullOrEmpty(firstName))) {
+            Predicate predicateForFirstName = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("firstName")), "%" + firstName.toLowerCase() + "%");
+            criteria = criteriaBuilder.and(criteria, predicateForFirstName);
+        }
+        if (!(Strings.isNullOrEmpty(secondName))) {
+            Predicate predicateForSecondName = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("secondName")), "%" + secondName.toLowerCase() + "%");
+            criteria = criteriaBuilder.and(criteria, predicateForSecondName);
+        }
+        if (!(Strings.isNullOrEmpty(middleName))) {
+            Predicate predicateForMiddleName = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("secondName")), "%" + middleName.toLowerCase() + "%");
+            criteria = criteriaBuilder.and(criteria, predicateForMiddleName);
+        }
+        if (!(Strings.isNullOrEmpty(possition))) {
+            Predicate predicateForPossition = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("possition")), "%" + possition + "%");
+            criteria = criteriaBuilder.and(criteria, predicateForPossition);
+        }
+        if (!(Strings.isNullOrEmpty(docCode))) {
+            Predicate predicateForDocCode = criteriaBuilder.equal(itemRoot.get("document").get("docType").get("code"), Integer.valueOf(docCode));
+            criteria = criteriaBuilder.and(criteria, predicateForDocCode);
+        }
+        if (!(Strings.isNullOrEmpty(citizenshipCode))) {
+            Predicate predicateForCitizenshipCodee = criteriaBuilder.equal(itemRoot.get("citizenship").get("code"), Integer.valueOf(citizenshipCode));
+            criteria = criteriaBuilder.and(criteria, predicateForCitizenshipCodee);
+        }
+        criteriaQuery.where(criteria);
+        return em.createQuery(criteriaQuery).getResultList();
     }
 
     /**
@@ -80,53 +111,6 @@ public class UserDaoImpl implements UserDao {
         return getUniqueResultByCriteria("docType", code, name);
     }
 
-    /**
-     * Найти сотрудников по заданным параметрам
-     * и вернуть их список
-     *
-     * @param officeId
-     * @param firstName
-     * @param secondName
-     * @param middleName
-     * @param possition
-     * @param docCode
-     * @param citizenshipCode
-     * @return List<User>
-     */
-    private List<User> getListUsersByCriteria(String officeId, String firstName, String secondName, String middleName, String possition, String docCode, String citizenshipCode) {
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        Root<User> itemRoot = criteriaQuery.from(User.class);
-        Predicate criteria = criteriaBuilder.conjunction();
-        Predicate predicateForOrgId = criteriaBuilder.equal(itemRoot.get("office"), Integer.valueOf(officeId));
-        criteria = criteriaBuilder.and(criteria, predicateForOrgId);
-        if (!(Strings.isNullOrEmpty(firstName))) {
-            Predicate predicateForFirstName = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("firstName")), "%" + firstName.toLowerCase() + "%");
-            criteria = criteriaBuilder.and(criteria, predicateForFirstName);
-        }
-        if (!(Strings.isNullOrEmpty(secondName))) {
-            Predicate predicateForSecondName = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("secondName")), "%" + secondName.toLowerCase() + "%");
-            criteria = criteriaBuilder.and(criteria, predicateForSecondName);
-        }
-        if (!(Strings.isNullOrEmpty(middleName))) {
-            Predicate predicateForMiddleName = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("secondName")), "%" + middleName.toLowerCase() + "%");
-            criteria = criteriaBuilder.and(criteria, predicateForMiddleName);
-        }
-        if (!(Strings.isNullOrEmpty(possition))) {
-            Predicate predicateForPossition = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("possition")), "%" + possition + "%");
-            criteria = criteriaBuilder.and(criteria, predicateForPossition);
-        }
-        if (!(Strings.isNullOrEmpty(docCode))) {
-            Predicate predicateForDocCode = criteriaBuilder.equal(itemRoot.get("document").get("docType").get("code"), Integer.valueOf(docCode));
-            criteria = criteriaBuilder.and(criteria, predicateForDocCode);
-        }
-        if (!(Strings.isNullOrEmpty(citizenshipCode))) {
-            Predicate predicateForCitizenshipCodee = criteriaBuilder.equal(itemRoot.get("citizenship").get("code"), Integer.valueOf(citizenshipCode));
-            criteria = criteriaBuilder.and(criteria, predicateForCitizenshipCodee);
-        }
-        criteriaQuery.where(criteria);
-        return em.createQuery(criteriaQuery).getResultList();
-    }
 
     /**
      * Вернуть docType либо citizenshipCode по code, name
