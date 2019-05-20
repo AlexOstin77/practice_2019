@@ -1,7 +1,7 @@
 package ru.bellintegrator.practice.service;
 
 import ru.bellintegrator.practice.model.User;
-import ru.bellintegrator.practice.view.UserFiltrView;
+import ru.bellintegrator.practice.view.UserFilterView;
 import ru.bellintegrator.practice.view.UserView;
 
 import java.util.List;
@@ -14,10 +14,10 @@ public interface UserService {
     /**
      * Получить отфильтрованный список сотрудников
      *
-     * @param userFiltrView
-     * @return List<UserFiltrView>
+     * @param userFilterView
+     * @return List<UserFilterView>
      */
-    List<UserFiltrView> filterUserList(UserFiltrView userFiltrView);
+    List<UserFilterView> filterUserList(UserFilterView userFilterView);
 
     /**
      * Получить сотрудника по идентификатору

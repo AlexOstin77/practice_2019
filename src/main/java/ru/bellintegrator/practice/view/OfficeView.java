@@ -46,6 +46,16 @@ public class OfficeView {
      */
     private String orgId;
 
+    public OfficeView() {
+    }
+
+    public OfficeView(String id, String name, String address, Boolean isActive) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.isActive = isActive;
+    }
+
     public void setOrgId(String orgId) {
         this.orgId = orgId;
     }

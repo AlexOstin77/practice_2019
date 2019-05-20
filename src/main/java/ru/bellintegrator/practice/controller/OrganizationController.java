@@ -20,7 +20,7 @@ public interface OrganizationController {
      *                               “inn”:””,
      *                               “isActive”:””
      *                               }
-     * @return JSON organizationFiltrView value
+     * @return JSON organizationFilterView value
      * Out:
      * [
      * {
@@ -38,7 +38,7 @@ public interface OrganizationController {
      *
      * @param id In
      *           {id}
-     * @return JSON organizationFiltrView value
+     * @return JSON organizationFilterView value
      * Out:
      * {
      * “id”:””,

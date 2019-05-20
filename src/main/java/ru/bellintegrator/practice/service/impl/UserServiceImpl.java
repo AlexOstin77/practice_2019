@@ -14,7 +14,7 @@ import ru.bellintegrator.practice.model.Document;
 import ru.bellintegrator.practice.model.Office;
 import ru.bellintegrator.practice.model.User;
 import ru.bellintegrator.practice.service.UserService;
-import ru.bellintegrator.practice.view.UserFiltrView;
+import ru.bellintegrator.practice.view.UserFilterView;
 import ru.bellintegrator.practice.view.UserView;
 
 import java.util.List;
@@ -39,13 +39,13 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public List<UserFiltrView> filterUserList(UserFiltrView userFiltrView) {
-        log.debug("userFiltrView {} ", userFiltrView.toString());
-        validateOfficeId(userFiltrView.getOfficeId());
-        List<User> all = dao.filterUserList(userFiltrView.getOfficeId(), userFiltrView.getFirstName(), userFiltrView.getSecondName(), userFiltrView.getMiddleName(), userFiltrView.getPossition(), userFiltrView.getDocCode(), userFiltrView.getCitizenshipCode());
+    public List<UserFilterView> filterUserList(UserFilterView userFilterView) {
+        log.debug("userFilterView {} ", userFilterView.toString());
+        validateOfficeId(userFilterView.getOfficeId());
+        List<User> all = dao.filterUserList(userFilterView.getOfficeId(), userFilterView.getFirstName(), userFilterView.getSecondName(), userFilterView.getMiddleName(), userFilterView.getPossition(), userFilterView.getDocCode(), userFilterView.getCitizenshipCode());
         log.debug("all {} ", all);
-        Function<User, UserFiltrView> mapUser = p -> {
-            UserFiltrView view = new UserFiltrView();
+        Function<User, UserFilterView> mapUser = p -> {
+            UserFilterView view = new UserFilterView();
             view.setId(String.valueOf(p.getId()));
             view.setFirstName(p.getFirstName());
             view.setSecondName(p.getSecondName());
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserView getUserById(String id) {
-        validateId(id);
+        validateUserId(id);
         User user = dao.loadUserById(Integer.valueOf(id));
         return setResponseToView(user);
     }
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUser(UserView view) {
-        validateId(view.getId());
+        validateUserId(view.getId());
         User user = dao.loadUserById(Integer.valueOf(view.getId()));
         validateViewOfUpdate(view, user);
         Office office = new Office();
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void saveUser(UserView view, User user) {
         if (Strings.isNullOrEmpty(view.getFirstName()) || Strings.isNullOrEmpty(view.getPossition())) {
-            throw new CustomException("Не заполнены обязательные поля* ");
+            throw new CustomException("Не заполнены все обязательные поля* сотрудника");
         }
         Country citizenship;
         DocType docType;
@@ -165,13 +165,13 @@ public class UserServiceImpl implements UserService {
      *
      * @param id
      */
-    private void validateId(String id) {
+    private void validateUserId(String id) {
         log.debug("Id  " + id);
         if (Strings.isNullOrEmpty(id)) {
-            throw new CustomException("Не заполнено обязательное поле Id* ");
+            throw new CustomException("Не заполнено обязательное поле Id* сотрудника");
         }
         if (!id.matches("^\\d*$")) {
-            throw new CustomException(String.format("Неверное ID сотрудника %s", id));
+            throw new CustomException(String.format("Неверное Id сотрудника %s", id));
         }
     }
 
@@ -214,7 +214,7 @@ public class UserServiceImpl implements UserService {
      */
     private void validateViewOfUpdate(UserView view, User user) {
         if (user == null) {
-            throw new CustomException(String.format("Не найден сотрудник с ID %s", view.getId()));
+            throw new CustomException(String.format("Не найден сотрудник с Id %s", view.getId()));
         }
     }
 
@@ -227,7 +227,7 @@ public class UserServiceImpl implements UserService {
      */
     private void validateOfficeToNull(UserView view, Office office) {
         if (office == null) {
-            throw new CustomException(String.format("Не найден офис с ID %s", view.getOfficeId()));
+            throw new CustomException(String.format("Не найден офис с Id %s", view.getOfficeId()));
         }
     }
 
@@ -240,7 +240,7 @@ public class UserServiceImpl implements UserService {
      */
     private void validateOfficeId(String id) {
         if (Strings.isNullOrEmpty(id)) {
-            throw new CustomException("Не заполнено обязательное поле* ID офиса ");
+            throw new CustomException("Не заполнено обязательное поле officeId* сотрудника");
         }
     }
 }

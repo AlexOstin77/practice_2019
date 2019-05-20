@@ -164,6 +164,10 @@ public class UserView {
         return officeId;
     }
 
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
     public String getDocCode() {
         return docCode;
     }

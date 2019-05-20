@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.bellintegrator.practice.controller.UserController;
 import ru.bellintegrator.practice.service.UserService;
-import ru.bellintegrator.practice.view.UserFiltrView;
+import ru.bellintegrator.practice.view.UserFilterView;
 import ru.bellintegrator.practice.view.UserView;
 
 import java.util.List;
@@ -42,11 +42,11 @@ public class UserControllerImpl implements UserController {
      */
     @Override
     @RequestMapping(value = "/user/list", method = {POST})
-    public List<UserFiltrView> filterUsers(@RequestBody UserFiltrView userFiltrView) {
-        List<UserFiltrView> userFiltrViewList = userService.filterUserList(userFiltrView);
-        log.debug("userFiltrView  {} ", userFiltrView);
-        log.debug("userFiltrViewList {} ", userFiltrViewList);
-        return userFiltrViewList;
+    public List<UserFilterView> filterUsers(@RequestBody UserFilterView userFilterView) {
+        List<UserFilterView> userFilterViewList = userService.filterUserList(userFilterView);
+        log.debug("userFilterView  {} ", userFilterView);
+        log.debug("userFilterViewList {} ", userFilterViewList);
+        return userFilterViewList;
     }
 
     /**

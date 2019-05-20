@@ -13,7 +13,7 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, setterVisibility = NONE)
-public class UserFiltrView {
+public class UserFilterView {
 
     /**
      * Id сотрудника
@@ -67,6 +67,10 @@ public class UserFiltrView {
         return officeId;
     }
 
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -109,7 +113,7 @@ public class UserFiltrView {
 
     @Override
     public String toString() {
-        return "UserFiltrView{" +
+        return "UserFilterView{" +
                 "id='" + id + '\'' +
                 ", officeId='" + officeId + '\'' +
                 ", firstName='" + firstName + '\'' +

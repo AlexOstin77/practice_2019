@@ -72,6 +72,12 @@ public class OrganizationFilterView {
     public OrganizationFilterView() {
     }
 
+    public OrganizationFilterView(String id, String name, Boolean isActive) {
+        this.id = id;
+        this.name = name;
+        this.isActive = isActive;
+    }
+
     @Override
     public String toString() {
         return "OrganizationFilterView{" +

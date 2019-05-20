@@ -44,14 +44,22 @@ public class OfficeFilterView {
     public OfficeFilterView() {
     }
 
-    public OfficeFilterView(String id, String name, boolean isActive) {
+    public OfficeFilterView(String orgId) {
+        this.orgId = orgId;
+    }
+
+    public OfficeFilterView(Boolean isActive, String orgId) {
+        this.isActive = isActive;
+        this.orgId = orgId;
+    }
+
+    public OfficeFilterView(String id, String name, Boolean isActive) {
         this.id = id;
         this.name = name;
         this.isActive = isActive;
     }
 
     public OfficeFilterView(String name, Boolean isActive, String orgId) {
-        this.id = id;
         this.name = name;
         this.isActive = isActive;
         this.orgId = orgId;

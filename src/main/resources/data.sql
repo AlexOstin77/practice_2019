@@ -1,6 +1,6 @@
 INSERT INTO ORGANIZATION (ID, VERSION, NAME, FULL_NAME, INN, KPP, ADDRESS, PHONE, IS_ACTIVE) VALUES (0, 999, '', '', '', '', '', '', FALSE);
 
-INSERT INTO ORGANIZATION (ID, VERSION, NAME, FULL_NAME, INN, KPP, ADDRESS, PHONE, IS_ACTIVE) VALUES (1, 999, 'ООО СТАРТ', 'ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕСТВЕННОСТЬЮ СТАРТ', '5820001122', '582001001', 'ПЕНЗА УЛ.КРАСНАЯ Д. 1', '541234', TRUE);
+INSERT INTO ORGANIZATION (ID, VERSION, NAME, FULL_NAME, INN, KPP, ADDRESS, PHONE, IS_ACTIVE) VALUES (1, 999, 'ОАО СТАРТ', 'ОТКРЫТОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО СТАРТ', '5820001122', '582001001', 'ПЕНЗА УЛ.КРАСНАЯ Д. 1', '541234', TRUE);
 
 INSERT INTO ORGANIZATION (ID, VERSION, NAME, FULL_NAME, INN, KPP, ADDRESS, PHONE, IS_ACTIVE) VALUES (2, 999, 'ЗАО МИР', 'ЗАКРЫТОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО МИР', '5820003344', '582001001', 'ПЕНЗА ПР.ПОБЕДЫ Д. 9', '551234', TRUE);
 

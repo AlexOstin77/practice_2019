@@ -101,7 +101,7 @@ public class OrganizationServiceImpl implements OrganizationService {
      */
     private void validateFilter(String name, String inn) {
         if (Strings.isNullOrEmpty(name)) {
-            throw new CustomException("Не заполнено обязательное поле name*");
+            throw new CustomException("Не заполнено обязательное поле name* организации");
         }
         if (!(Strings.isNullOrEmpty(inn)) && !(inn.matches("^\\d{0,10}$"))) {
             throw new CustomException(String.format("Неверное ИНН организации %s", inn));
@@ -117,7 +117,7 @@ public class OrganizationServiceImpl implements OrganizationService {
      */
     private void validateId(String id) {
         if (id == null) {
-            throw new CustomException("Не заполнено обязательное поле Id* ");
+            throw new CustomException("Не заполнено обязательное поле Id* организации");
         }
         if (!id.matches("^\\d*$")) {
             throw new CustomException(String.format("Неверное ID организации %s", id));
@@ -136,7 +136,7 @@ public class OrganizationServiceImpl implements OrganizationService {
                 || Strings.isNullOrEmpty(view.getFullName()) || Strings.isNullOrEmpty(view.getInn())
                 || Strings.isNullOrEmpty(view.getKpp()) || Strings.isNullOrEmpty(view.getAddress())
         ) {
-            throw new CustomException("Не заполнены обязательные поля* ");
+            throw new CustomException("Не заполнены все обязательные поля* организации");
         }
 
     }
@@ -152,7 +152,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         if (Strings.isNullOrEmpty(view.getName()) || Strings.isNullOrEmpty(view.getFullName()) || Strings.isNullOrEmpty(view.getInn())
                 || Strings.isNullOrEmpty(view.getKpp()) || Strings.isNullOrEmpty(view.getAddress())
         ) {
-            throw new CustomException("Не заполнены обязательные поля* ");
+            throw new CustomException("Не заполнены все обязательные поля* организации");
         }
     }
 

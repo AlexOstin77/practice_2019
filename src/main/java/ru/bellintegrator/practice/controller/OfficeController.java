@@ -21,7 +21,7 @@ public interface OfficeController {
      *                         “phone”:””,
      *                         “isActive”
      *                         }
-     * @return JSON officeFiltrView value
+     * @return JSON officeFilterView value
      * Out:
      * [
      * {

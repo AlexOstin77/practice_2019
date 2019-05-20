@@ -56,7 +56,7 @@ public class UserDaoImpl implements UserDao {
             criteria = criteriaBuilder.and(criteria, predicateForMiddleName);
         }
         if (!(Strings.isNullOrEmpty(possition))) {
-            Predicate predicateForPossition = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("possition")), "%" + possition + "%");
+            Predicate predicateForPossition = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("possition")), "%" + possition.toLowerCase() + "%");
             criteria = criteriaBuilder.and(criteria, predicateForPossition);
         }
         if (!(Strings.isNullOrEmpty(docCode))) {
@@ -100,7 +100,7 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public Country loadCitizenshipByCodeAndName(String code, String name) {
-        return getUniqueResultByCriteria("citizenship", code, name);
+        return getCitizenshipByCriteria( code, name);
     }
 
     /**
@@ -108,33 +108,43 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public DocType loadDocTypeByCodeAndName(String code, String name) {
-        return getUniqueResultByCriteria("docType", code, name);
+        return getDocTypeByCriteria(code, name);
     }
 
 
     /**
-     * Вернуть docType либо citizenshipCode по code, name
-     * Тип возращаемого значения определяется параметром criteriaStr
+     * Вернуть docType  по code, name
      *
-     * @param criteriaStr
      * @param code
      * @param name
-     * @return T
+     * @return DocType
      */
-    private <T> T getUniqueResultByCriteria(String criteriaStr, String code, String name) {
+      private DocType getDocTypeByCriteria(String code, String name) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery criteria = builder.createQuery();
-        Root<T> criteriaRoot = null;
-        if (criteriaStr.equals("citizenship")) {
-            criteria = builder.createQuery(Country.class);
-            criteriaRoot = criteria.from(Country.class);
-        }
-        if (criteriaStr.equals("docType")) {
-            criteria = builder.createQuery(DocType.class);
-            criteriaRoot = criteria.from(DocType.class);
-        }
+        CriteriaQuery<DocType> criteria = builder.createQuery(DocType.class);
+        Root<DocType> criteriaRoot = criteria.from(DocType.class);
+        criteria = builder.createQuery(DocType.class);
+        criteriaRoot = criteria.from(DocType.class);
         criteria.where(builder.equal(criteriaRoot.get("code"), code), builder.equal(criteriaRoot.get("name"), name));
-        TypedQuery<T> query = em.createQuery(criteria);
+        TypedQuery<DocType> query = em.createQuery(criteria);
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
+    /**
+     * Вернуть citizenshipCode по code, name
+     *
+     *  @param code
+     * @param name
+     * @return DocType
+     */
+    private Country getCitizenshipByCriteria(String code, String name) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Country> criteria = builder.createQuery(Country.class);
+        Root<Country> criteriaRoot = criteria.from(Country.class);
+        criteria = builder.createQuery(Country.class);
+        criteriaRoot = criteria.from(Country.class);
+        criteria.where(builder.equal(criteriaRoot.get("code"), code), builder.equal(criteriaRoot.get("name"), name));
+        TypedQuery<Country> query = em.createQuery(criteria);
         return query.getResultList().stream().findFirst().orElse(null);
     }
 }

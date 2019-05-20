@@ -39,7 +39,7 @@ public class OfficeServiceImpl implements OfficeService {
     @Override
     public List<OfficeFilterView> filterOfficeList(OfficeFilterView officeFilterView) {
         validateFilterView(officeFilterView);
-        log.debug("filtrOfficeView {} ", officeFilterView.toString());
+        log.debug("filterOfficeView {} ", officeFilterView.toString());
         List<Office> all = dao.filterOfficeList(officeFilterView.getOrgId(), officeFilterView.getName(), officeFilterView.getPhone(), officeFilterView.getActive());
         Function<Office, OfficeFilterView> mapOffice = p -> {
             OfficeFilterView view = new OfficeFilterView(String.valueOf(p.getId()), p.getName(), p.getActive());
@@ -99,7 +99,7 @@ public class OfficeServiceImpl implements OfficeService {
      */
     private void validateFilterView(OfficeFilterView officeFilterView) {
         if (Strings.isNullOrEmpty(officeFilterView.getOrgId())) {
-            throw new CustomException("Не заполнено обязательное поле OrgId*");
+            throw new CustomException("Не заполнено обязательное поле OrgId* офиса");
         }
         if (!officeFilterView.getOrgId().matches("^\\d*$")) {
             throw new CustomException(String.format("Неверное ID организации %s", officeFilterView.getOrgId()));
@@ -115,7 +115,7 @@ public class OfficeServiceImpl implements OfficeService {
      */
     private void validateViewId(String id) {
         if (id == null) {
-            throw new CustomException("Не заполнено обязательное поле Id* ");
+            throw new CustomException("Не заполнено обязательное поле Id* офиса");
         }
         if (!id.matches("^\\d*$")) {
             throw new CustomException(String.format("Неверное ID офиса %s", id));
@@ -133,7 +133,7 @@ public class OfficeServiceImpl implements OfficeService {
         if (Strings.isNullOrEmpty(view.getId()) || Strings.isNullOrEmpty(view.getName())
                 || Strings.isNullOrEmpty(view.getAddress()) || view.getActive() == null
         ) {
-            throw new CustomException("Не заполнены обязательные поля* ");
+            throw new CustomException("Не заполнены все обязательные поля* офиса");
         }
     }
 
@@ -146,7 +146,7 @@ public class OfficeServiceImpl implements OfficeService {
      */
     private void validateAddView(OfficeView view) {
         if (Strings.isNullOrEmpty(view.getOrgId())) {
-            throw new CustomException("Не заполнено обязательное поле orgId* Oрганизации ");
+            throw new CustomException("Не заполнено обязательное поле orgId* офиса");
         }
         if (!view.getOrgId().matches("^\\d*$")) {
             throw new CustomException(String.format("Неверное ID организации %s", Integer.valueOf(view.getOrgId())));

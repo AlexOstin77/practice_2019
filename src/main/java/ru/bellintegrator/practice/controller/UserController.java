@@ -2,7 +2,7 @@ package ru.bellintegrator.practice.controller;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import ru.bellintegrator.practice.view.UserFiltrView;
+import ru.bellintegrator.practice.view.UserFilterView;
 import ru.bellintegrator.practice.view.UserView;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public interface UserController {
      * по параметрам
      * method:GET
      *
-     * @param userFiltrView In (фильтр):
+     * @param userFilterView In (фильтр):
      *                      {
      *                      “officeId”:””, //обязательный параметр
      *                      “firstName”:””,
@@ -25,7 +25,7 @@ public interface UserController {
      *                      “citizenshipCode”:””
      *                      }
      */
-    List<UserFiltrView> filterUsers(@RequestBody UserFiltrView userFiltrView);
+    List<UserFilterView> filterUsers(@RequestBody UserFilterView userFilterView);
 
     /**
      * Поиск сотрудника по id
@@ -33,7 +33,7 @@ public interface UserController {
      *
      * @param id In
      *           {id}
-     * @return JSON userFiltrView value
+     * @return JSON userFilterView value
      * Out:
      * {
      * “id”:””,

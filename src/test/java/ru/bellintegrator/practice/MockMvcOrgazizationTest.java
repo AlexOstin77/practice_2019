@@ -1,35 +1,33 @@
 package ru.bellintegrator.practice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ru.bellintegrator.practice.controller.impl.OrganizationControllerImpl;
+import ru.bellintegrator.practice.service.impl.OrganizationServiceImpl;
 import ru.bellintegrator.practice.view.OrganizationFilterView;
 import ru.bellintegrator.practice.view.OrganizationView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -38,88 +36,53 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MockMvcOrgazizationTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    OrganizationServiceImpl service;
+
     private static final ObjectMapper om = new ObjectMapper();
 
-    @MockBean
-    private OrganizationControllerImpl mockOrganizationControllerImpl;
-
-    @Before
-    public void init() {
-        OrganizationFilterView organizationFilterViewGetById1 = new OrganizationFilterView();
-        OrganizationFilterView organizationFilterViewGetById2 = new OrganizationFilterView();
-        OrganizationFilterView organizationFilterViewGetById3 = new OrganizationFilterView();
-        List organizationFilterListContainsId1Id2 = new ArrayList<OrganizationFilterView>();
-        List organizationFilterList1 = new ArrayList<OrganizationFilterView>();
+    @Test
+    public void testGetOrganizationIsOk() throws Exception {
         OrganizationView organizationViewGetById1 = new OrganizationView();
         organizationViewGetById1.setId("1");
-        organizationViewGetById1.setName("ООО СТАРТ");
-        organizationViewGetById1.setFullName("ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕСТВЕННОСТЬЮ СТАРТ");
+        organizationViewGetById1.setName("ОАО СТАРТ");
+        organizationViewGetById1.setFullName("ОТКРЫТОЕ АКЦИОНЕРНОЕ ОБЩЕСТВО СТАРТ");
         organizationViewGetById1.setInn("5820001122");
         organizationViewGetById1.setKpp("582001001");
         organizationViewGetById1.setAddress("ПЕНЗА УЛ.КРАСНАЯ Д. 1");
         organizationViewGetById1.setPhone("541234");
         organizationViewGetById1.setActive(true);
-
-        OrganizationView organizationViewGetById2 = new OrganizationView();
-        organizationViewGetById2.setId("2");
-        organizationFilterViewGetById1.setId("1");
-        organizationFilterViewGetById1.setName("ООО СТАРТ");
-        organizationFilterViewGetById1.setActive(true);
-
-        organizationFilterViewGetById2.setId("2");
-        organizationFilterViewGetById2.setName("ЗАО МИР");
-        organizationFilterViewGetById2.setActive(true);
-
-        organizationFilterViewGetById3.setId("3");
-        organizationFilterViewGetById3.setName("КБ ИНТЕГРАЛ");
-        organizationFilterViewGetById3.setActive(false);
-
-
-        organizationFilterList1.add(organizationFilterViewGetById1);
-
-        organizationFilterListContainsId1Id2.add(organizationFilterViewGetById1);
-        organizationFilterListContainsId1Id2.add(organizationFilterViewGetById2);
-
-        OrganizationFilterView organizationFilterViewNameWithO = new OrganizationFilterView();
-        organizationFilterViewNameWithO.setName("О");
-
-        when(mockOrganizationControllerImpl.getOrganizationById("1")).thenReturn(organizationViewGetById1);
-        when(mockOrganizationControllerImpl.getOrganizationById("2")).thenReturn(organizationViewGetById2);
-        when(mockOrganizationControllerImpl.filterOrganizations(organizationFilterViewNameWithO)).thenReturn(organizationFilterListContainsId1Id2);
-    }
-
-    @Test
-    public void getOrganizationById1() throws Exception {
         mockMvc.perform(get("/api/organization/1"))
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is("1")))
-                .andExpect(jsonPath("$.name", is("ООО СТАРТ")))
-                .andExpect(jsonPath("$.fullName", is("ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕСТВЕННОСТЬЮ СТАРТ")))
-                .andExpect(jsonPath("$.inn", is("5820001122")))
-                .andExpect(jsonPath("$.kpp", is("582001001")))
-                .andExpect(jsonPath("$.address", is("ПЕНЗА УЛ.КРАСНАЯ Д. 1")))
-                .andExpect(jsonPath("$.phone", is("541234")))
-                .andExpect(jsonPath("$.isActive", is(true)));
-        verify(mockOrganizationControllerImpl, times(1)).getOrganizationById("1");
+                .andExpect(jsonPath("$.id", is(organizationViewGetById1.getId())))
+                .andExpect(jsonPath("$.name", is(organizationViewGetById1.getName())))
+                .andExpect(jsonPath("$.fullName", is(organizationViewGetById1.getFullName())))
+                .andExpect(jsonPath("$.inn", is(organizationViewGetById1.getInn())))
+                .andExpect(jsonPath("$.kpp", is(organizationViewGetById1.getKpp())))
+                .andExpect(jsonPath("$.address", is(organizationViewGetById1.getAddress())))
+                .andExpect(jsonPath("$.phone", is(organizationViewGetById1.getPhone())))
+                .andExpect(jsonPath("$.isActive", is(organizationViewGetById1.getActive())));
     }
 
     @Test
-    public void getOrganizationById2() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                .get("/api/organization/{id}", 2)
+    public void testGetOrganizationByEmptyIdIsError() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+                .get("/api/organization/{id}", "")
                 .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(2));
+                .andReturn();
+        Assert.assertEquals("{\"error\":\"Не заполнено обязательное поле Id* организации\"}",
+                mvcResult.getResponse().getContentAsString());
     }
 
     @Test
-    public void postOrganizationFilter() throws Exception {
+    public void testPostOrganizationFilterNameIsOk() throws Exception {
         OrganizationFilterView organizationFilterViewNameWithO = new OrganizationFilterView();
-        organizationFilterViewNameWithO.setName("О");
-
+        organizationFilterViewNameWithO.setName("АО");
         mockMvc.perform(
                 post("/api/organization/list")
                         .content(om.writeValueAsString(organizationFilterViewNameWithO))
@@ -129,10 +92,63 @@ public class MockMvcOrgazizationTest {
     }
 
     @Test
-    public void postOrganizationAdd() throws Exception {
+    public void testPostOrganizationFilterEmptyNameIsError() throws Exception {
+        OrganizationFilterView organizationFilterViewNameWithO = new OrganizationFilterView();
+        organizationFilterViewNameWithO.setName("");
+        MvcResult mvcResult = mockMvc.perform(
+                post("/api/organization/list")
+                        .content(om.writeValueAsString(organizationFilterViewNameWithO))
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        Assert.assertEquals("{\"error\":\"Не заполнено обязательное поле name* организации\"}",
+                mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    public void testPostOrganizationUpdateIsOk() throws Exception {
+        String id = "3";
+        OrganizationView organizationViewUpdate = new OrganizationView();
+        organizationViewUpdate.setId(id);
+        organizationViewUpdate.setName("МУП ОБНОВЛЕНИЕ");
+        organizationViewUpdate.setFullName("ТЕСТ ОБНОВЛЕНИЕ");
+        organizationViewUpdate.setInn("5820009988");
+        organizationViewUpdate.setKpp("582001009");
+        organizationViewUpdate.setAddress("ГОРОД-2");
+        organizationViewUpdate.setPhone("111");
+        organizationViewUpdate.setActive(false);
+        mockMvc.perform(
+                post("/api/organization/update")
+                        .content(om.writeValueAsString(organizationViewUpdate))
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        assertEquals(service.getOrganizationById(id).getName(), organizationViewUpdate.getName());
+        assertEquals(service.getOrganizationById(id).getFullName(), organizationViewUpdate.getFullName());
+        assertEquals(service.getOrganizationById(id).getInn(), organizationViewUpdate.getInn());
+        assertEquals(service.getOrganizationById(id).getKpp(), organizationViewUpdate.getKpp());
+        assertEquals(service.getOrganizationById(id).getAddress(), organizationViewUpdate.getAddress());
+        assertEquals(service.getOrganizationById(id).getPhone(), organizationViewUpdate.getPhone());
+        assertEquals(service.getOrganizationById(id).getActive(), organizationViewUpdate.getActive());
+    }
+
+    @Test
+    public void testPostOrganizationUpdateIsError() throws Exception {
+        OrganizationView organizationViewUpdate = new OrganizationView();
+        MvcResult mvcResult = mockMvc.perform(
+                post("/api/organization/update")
+                        .content(om.writeValueAsString(organizationViewUpdate))
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        Assert.assertEquals("{\"error\":\"Не заполнены все обязательные поля* организации\"}",
+                mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    public void testPostOrganizationAddIsOk() throws Exception {
         OrganizationView organizationViewAdd = new OrganizationView();
-        organizationViewAdd.setName("ООО ЗАРЯ");
-        organizationViewAdd.setFullName("НОВАЯ ЗАРЯ");
+        organizationViewAdd.setName("ЖК НОВАЯ");
+        organizationViewAdd.setFullName("ДОБАВИТЬ ОРГАНИЗАЦИЮ НОВАЯ");
         organizationViewAdd.setInn("5820009999");
         organizationViewAdd.setKpp("582001001");
         organizationViewAdd.setAddress("город");
@@ -142,22 +158,41 @@ public class MockMvcOrgazizationTest {
                         .content(om.writeValueAsString(organizationViewAdd))
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+        String id = findIdFromListFilterOrganization(organizationViewAdd);
+        assertEquals(service.getOrganizationById(id).getName(), organizationViewAdd.getName());
+        assertEquals(service.getOrganizationById(id).getFullName(), organizationViewAdd.getFullName());
+        assertEquals(service.getOrganizationById(id).getInn(), organizationViewAdd.getInn());
+        assertEquals(service.getOrganizationById(id).getKpp(), organizationViewAdd.getKpp());
+        assertEquals(service.getOrganizationById(id).getAddress(), organizationViewAdd.getAddress());
+        assertEquals(service.getOrganizationById(id).getActive(), organizationViewAdd.getActive());
     }
 
     @Test
-    public void postOrganizationUpdate() throws Exception {
-        OrganizationView organizationViewUpdate = new OrganizationView();
-        organizationViewUpdate.setId("3");
-        organizationViewUpdate.setName("МУП ОБНОВЛЕНИЕ");
-        organizationViewUpdate.setFullName("ТЕСТ ОБНОВЛЕНИЕ");
-        organizationViewUpdate.setInn("5820009988");
-        organizationViewUpdate.setKpp("582001009");
-        organizationViewUpdate.setAddress("ГОРОД-2");
-        mockMvc.perform(
-                post("/api/organization/update")
-                        .content(om.writeValueAsString(organizationViewUpdate))
+    public void testPostOrganizationAddEmptyNameIsError() throws Exception {
+        OrganizationView organizationViewAdd = new OrganizationView();
+        organizationViewAdd.setName("");
+        organizationViewAdd.setFullName("ДОБАВИТЬ ОРГАНИЗАЦИЮ НОВАЯ");
+        organizationViewAdd.setInn("5820009999");
+        organizationViewAdd.setKpp("582001001");
+        organizationViewAdd.setAddress("город");
+        organizationViewAdd.setActive(false);
+        MvcResult mvcResult = mockMvc.perform(
+                post("/api/organization/save")
+                        .content(om.writeValueAsString(organizationViewAdd))
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn();
+        Assert.assertEquals("{\"error\":\"Не заполнены все обязательные поля* организации\"}",
+                mvcResult.getResponse().getContentAsString());
+    }
+
+    public String findIdFromListFilterOrganization(OrganizationView organizationViewAdd) {
+        OrganizationFilterView organizationFilterView = new OrganizationFilterView();
+        organizationFilterView.setName(organizationViewAdd.getName());
+        organizationFilterView.setInn(organizationViewAdd.getInn());
+        organizationFilterView.setActive(organizationFilterView.getActive());
+        List<OrganizationFilterView> list = service.filterOrganizationList(organizationFilterView);
+        return list.get(0).getId();
     }
 
 }

@@ -45,7 +45,7 @@ public class OrganizationControllerImpl implements OrganizationController {
     @RequestMapping(value = "/organization/list", method = {POST})
     public List<OrganizationFilterView> filterOrganizations(@RequestBody OrganizationFilterView organization) {
         List<OrganizationFilterView> organizationFilterView = organizationService.filterOrganizationList(organization);
-        log.debug("filtr {} ", organization);
+        log.debug("filter {} ", organization);
         log.debug("list {} ", organizationFilterView);
         return organizationFilterView;
     }
