@@ -55,6 +55,14 @@ public class UserFilterView {
      */
     private String citizenshipCode;
 
+    public UserFilterView() {
+    }
+
+    public UserFilterView(String officeId, String possition) {
+        this.officeId = officeId;
+        this.possition = possition;
+    }
+
     public String getId() {
         return id;
     }

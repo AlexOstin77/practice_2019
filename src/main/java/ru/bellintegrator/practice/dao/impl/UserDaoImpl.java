@@ -30,7 +30,6 @@ public class UserDaoImpl implements UserDao {
         this.em = em;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -100,7 +99,14 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public Country loadCitizenshipByCodeAndName(String code, String name) {
-        return getCitizenshipByCriteria( code, name);
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Country> criteria;
+        Root<Country> criteriaRoot;
+        criteria = builder.createQuery(Country.class);
+        criteriaRoot = criteria.from(Country.class);
+        criteria.where(builder.equal(criteriaRoot.get("code"), code), builder.equal(criteriaRoot.get("name"), name));
+        TypedQuery<Country> query = em.createQuery(criteria);
+        return query.getResultList().stream().findFirst().orElse(null);
     }
 
     /**
@@ -108,43 +114,13 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public DocType loadDocTypeByCodeAndName(String code, String name) {
-        return getDocTypeByCriteria(code, name);
-    }
-
-
-    /**
-     * Вернуть docType  по code, name
-     *
-     * @param code
-     * @param name
-     * @return DocType
-     */
-      private DocType getDocTypeByCriteria(String code, String name) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<DocType> criteria = builder.createQuery(DocType.class);
-        Root<DocType> criteriaRoot = criteria.from(DocType.class);
+        CriteriaQuery<DocType> criteria;
+        Root<DocType> criteriaRoot;
         criteria = builder.createQuery(DocType.class);
         criteriaRoot = criteria.from(DocType.class);
         criteria.where(builder.equal(criteriaRoot.get("code"), code), builder.equal(criteriaRoot.get("name"), name));
         TypedQuery<DocType> query = em.createQuery(criteria);
-        return query.getResultList().stream().findFirst().orElse(null);
-    }
-
-    /**
-     * Вернуть citizenshipCode по code, name
-     *
-     *  @param code
-     * @param name
-     * @return DocType
-     */
-    private Country getCitizenshipByCriteria(String code, String name) {
-        CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<Country> criteria = builder.createQuery(Country.class);
-        Root<Country> criteriaRoot = criteria.from(Country.class);
-        criteria = builder.createQuery(Country.class);
-        criteriaRoot = criteria.from(Country.class);
-        criteria.where(builder.equal(criteriaRoot.get("code"), code), builder.equal(criteriaRoot.get("name"), name));
-        TypedQuery<Country> query = em.createQuery(criteria);
         return query.getResultList().stream().findFirst().orElse(null);
     }
 }

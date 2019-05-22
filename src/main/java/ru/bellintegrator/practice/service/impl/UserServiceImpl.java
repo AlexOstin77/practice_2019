@@ -114,32 +114,13 @@ public class UserServiceImpl implements UserService {
         if (Strings.isNullOrEmpty(view.getFirstName()) || Strings.isNullOrEmpty(view.getPossition())) {
             throw new CustomException("Не заполнены все обязательные поля* сотрудника");
         }
-        Country citizenship;
-        DocType docType;
+        Country citizenship = getCitizenship(view);
+        DocType docType = getDocType(view);
         Document document = user.getDocument();
         if (document == null) {
             document = new Document();
         }
-        if (!(Strings.isNullOrEmpty(view.getDocCode()) && Strings.isNullOrEmpty(view.getDocName()))) {
-            docType = dao.loadDocTypeByCodeAndName(view.getDocCode(), view.getDocName());
-            if (docType == null) {
-                throw new CustomException(String.format("Не найден тип документа с кодом %s с названием %s", view.getDocCode(), view.getDocName()));
-            }
-        } else {
-            docType = dao.loadDocTypeByCodeAndName("", "");
-        }
-        if (!(Strings.isNullOrEmpty(view.getCitizenshipCode()) && Strings.isNullOrEmpty(view.getCitizenshipName()))) {
-            citizenship = dao.loadCitizenshipByCodeAndName(view.getCitizenshipCode(), view.getCitizenshipName());
-            if (citizenship == null) {
-                throw new CustomException(String.format("Не найдена страна с кодом %s и с наименованием %s", view.getCitizenshipCode(), view.getCitizenshipName()));
-            }
-        } else {
-            citizenship = dao.loadCitizenshipByCodeAndName("", "");
-        }
-        log.debug("view {} ", view);
-        log.debug("docType {} ", docType);
-        log.debug("citizen {} ", citizenship);
-        log.debug("document {} ", document);
+        log.debug("view {}, docType {}, citizen {}, document {} ", view, docType, citizenship, document);
         document.setDocType(docType);
         user.setDocument(document);
         user.setCitizenship(citizenship);
@@ -156,6 +137,50 @@ public class UserServiceImpl implements UserService {
         }
         log.debug("user {} ", user);
         dao.save(user);
+    }
+
+    /**
+     * Найти по коду и наименованию документа сущность DocType
+     * в случае не соответстия вызвать собственное исключения
+     * в случае если значения не заданы вернуть сущность без кода и названия
+     *
+     * @param view
+     * @return DocType
+     */
+    @Transactional
+    private DocType getDocType(UserView view) {
+        DocType docType;
+        if (!(Strings.isNullOrEmpty(view.getDocCode()) && Strings.isNullOrEmpty(view.getDocName()))) {
+            docType = dao.loadDocTypeByCodeAndName(view.getDocCode(), view.getDocName());
+            if (docType == null) {
+                throw new CustomException(String.format("Не найден тип документа с кодом %s с названием %s", view.getDocCode(), view.getDocName()));
+            }
+        } else {
+            docType = dao.loadDocTypeByCodeAndName("", "");
+        }
+        return docType;
+    }
+
+    /**
+     * Найти по коду и наименованию документа сущность Country
+     * в случае не соответстия вызвать собственное исключения
+     * в случае если значения не заданы вернуть сущность без кода и названия
+     *
+     * @param view
+     * @return DocType
+     */
+    @Transactional
+    private Country getCitizenship(UserView view) {
+        Country citizenship;
+        if (!(Strings.isNullOrEmpty(view.getCitizenshipCode()) && Strings.isNullOrEmpty(view.getCitizenshipName()))) {
+            citizenship = dao.loadCitizenshipByCodeAndName(view.getCitizenshipCode(), view.getCitizenshipName());
+            if (citizenship == null) {
+                throw new CustomException(String.format("Не найдена страна с кодом %s и с наименованием %s", view.getCitizenshipCode(), view.getCitizenshipName()));
+            }
+        } else {
+            citizenship = dao.loadCitizenshipByCodeAndName("", "");
+        }
+        return citizenship;
     }
 
     /**
