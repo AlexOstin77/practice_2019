@@ -41,11 +41,7 @@ public interface UserService {
      */
     void addUser(UserView userView);
 
-    /**
-     * Сохранить сотрудника
-     *
-     * @param user, userView
-     */
-    void saveUser(UserView userView, User user);
+
+//    void saveUser(UserView userView, User user);
 
 }

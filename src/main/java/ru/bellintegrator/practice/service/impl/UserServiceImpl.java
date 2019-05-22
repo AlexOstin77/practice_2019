@@ -19,6 +19,7 @@ import ru.bellintegrator.practice.view.UserView;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +30,9 @@ public class UserServiceImpl implements UserService {
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserDao dao;
+    private static final Pattern PATTERN = Pattern.compile("^\\d*$");
+    private static final String EMPTY_OFFICE_ID = "0";
+    private static final String EMPTY_DOCTYPECODE_OR_CITIZENSHIPCODE = "";
 
     @Autowired
     public UserServiceImpl(UserDao dao) {
@@ -41,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserFilterView> filterUserList(UserFilterView userFilterView) {
         log.debug("userFilterView {} ", userFilterView.toString());
-        validateOfficeId(userFilterView.getOfficeId());
+        validateId("officeId*", userFilterView.getOfficeId());
         List<User> all = dao.filterUserList(userFilterView.getOfficeId(), userFilterView.getFirstName(), userFilterView.getSecondName(), userFilterView.getMiddleName(), userFilterView.getPossition(), userFilterView.getDocCode(), userFilterView.getCitizenshipCode());
         log.debug("all {} ", all);
         Function<User, UserFilterView> mapUser = p -> {
@@ -63,7 +67,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserView getUserById(String id) {
-        validateUserId(id);
+        validateId("Id*", id);
         User user = dao.loadUserById(Integer.valueOf(id));
         return setResponseToView(user);
     }
@@ -74,21 +78,26 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUser(UserView view) {
-        validateUserId(view.getId());
+        validateId("Id*", view.getId());
         User user = dao.loadUserById(Integer.valueOf(view.getId()));
-        validateViewOfUpdate(view, user);
-        Office office = new Office();
-        if (!(Strings.isNullOrEmpty(view.getOfficeId()))) {
-            office = dao.loadOfficeById(view.getOfficeId());
-            validateOfficeToNull(view, office);
-        } else {
-            office = dao.loadOfficeById("0");
-        }
+        validateToNull(view.getId(), "сотрудник", user);
+        Office office = getOffice(view);
         user.setOffice(office);
         log.debug("office {} ", office);
         saveUser(view, user);
     }
 
+    private Office getOffice(UserView view) {
+        Office office;
+        if (!(Strings.isNullOrEmpty(view.getOfficeId()))) {
+            validateId("officeId*", view.getOfficeId());
+            office = dao.loadOfficeById(view.getOfficeId());
+            validateToNull(view.getOfficeId(), "офис", office);
+        } else {
+            office = dao.loadOfficeById(EMPTY_OFFICE_ID);
+        }
+        return office;
+    }
 
     /**
      * {@inheritDoc}
@@ -96,9 +105,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void addUser(UserView view) {
-        validateOfficeId(view.getOfficeId());
+        validateId("officeId*", view.getOfficeId());
         Office office = dao.loadOfficeById(view.getOfficeId());
-        validateOfficeToNull(view, office);
+        validateToNull(view.getOfficeId(), "офис", office);
         log.debug("office {} ", office);
         User user = new User();
         user.setOffice(office);
@@ -106,11 +115,12 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * {@inheritDoc}
+     * Сохранить сотрудника в user
+     * по значениям переданным в view
+     *
+     * @param user, userView
      */
-    @Override
-    @Transactional
-    public void saveUser(UserView view, User user) {
+    private void saveUser(UserView view, User user) {
         if (Strings.isNullOrEmpty(view.getFirstName()) || Strings.isNullOrEmpty(view.getPossition())) {
             throw new CustomException("Не заполнены все обязательные поля* сотрудника");
         }
@@ -147,7 +157,6 @@ public class UserServiceImpl implements UserService {
      * @param view
      * @return DocType
      */
-    @Transactional
     private DocType getDocType(UserView view) {
         DocType docType;
         if (!(Strings.isNullOrEmpty(view.getDocCode()) && Strings.isNullOrEmpty(view.getDocName()))) {
@@ -156,7 +165,7 @@ public class UserServiceImpl implements UserService {
                 throw new CustomException(String.format("Не найден тип документа с кодом %s с названием %s", view.getDocCode(), view.getDocName()));
             }
         } else {
-            docType = dao.loadDocTypeByCodeAndName("", "");
+            docType = dao.loadDocTypeByCodeAndName(EMPTY_DOCTYPECODE_OR_CITIZENSHIPCODE, EMPTY_DOCTYPECODE_OR_CITIZENSHIPCODE);
         }
         return docType;
     }
@@ -164,12 +173,11 @@ public class UserServiceImpl implements UserService {
     /**
      * Найти по коду и наименованию документа сущность Country
      * в случае не соответстия вызвать собственное исключения
-     * в случае если значения не заданы вернуть сущность без кода и названия
+     * в случае если значения не заданы EMPTY_DOCTYPECODE_OR_CITIZENSHIPCODE вернуть сущность без кода и названия
      *
      * @param view
      * @return DocType
      */
-    @Transactional
     private Country getCitizenship(UserView view) {
         Country citizenship;
         if (!(Strings.isNullOrEmpty(view.getCitizenshipCode()) && Strings.isNullOrEmpty(view.getCitizenshipName()))) {
@@ -178,26 +186,9 @@ public class UserServiceImpl implements UserService {
                 throw new CustomException(String.format("Не найдена страна с кодом %s и с наименованием %s", view.getCitizenshipCode(), view.getCitizenshipName()));
             }
         } else {
-            citizenship = dao.loadCitizenshipByCodeAndName("", "");
+            citizenship = dao.loadCitizenshipByCodeAndName(EMPTY_DOCTYPECODE_OR_CITIZENSHIPCODE, EMPTY_DOCTYPECODE_OR_CITIZENSHIPCODE);
         }
         return citizenship;
-    }
-
-    /**
-     * Проверить идентификатор
-     * на числовой тип данных
-     * в случае ошибки вызвать собственное исключения
-     *
-     * @param id
-     */
-    private void validateUserId(String id) {
-        log.debug("Id  " + id);
-        if (Strings.isNullOrEmpty(id)) {
-            throw new CustomException("Не заполнено обязательное поле Id* сотрудника");
-        }
-        if (!id.matches("^\\d*$")) {
-            throw new CustomException(String.format("Неверное Id сотрудника %s", id));
-        }
     }
 
     /**
@@ -231,41 +222,34 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Проверить view при обновления сотрудника на null
+     * Проверить Object на null
      * в случае ошибки вызвать собственное исключения
+     * viewId  и msg передаются в тексте этого искючения
      *
-     * @param view
-     * @param user
+     * @param viewId
+     * @param msg
+     * @param object
      */
-    private void validateViewOfUpdate(UserView view, User user) {
-        if (user == null) {
-            throw new CustomException(String.format("Не найден сотрудник с Id %s", view.getId()));
+    private void validateToNull(String viewId, String msg, Object object) {
+        if (object == null) {
+            throw new CustomException(String.format("Не найден %s с Id = %s", msg, viewId));
         }
     }
 
     /**
-     * Проверить office на null
+     * Проверить id  на пустоту и null
      * в случае ошибки вызвать собственное исключения
-     *
-     * @param view
-     * @param office
-     */
-    private void validateOfficeToNull(UserView view, Office office) {
-        if (office == null) {
-            throw new CustomException(String.format("Не найден офис с Id %s", view.getOfficeId()));
-        }
-    }
-
-
-    /**
-     * Проверить id  office на заполнение
-     * в случае ошибки вызвать собственное исключения
+     * Id  и msg передаются в тексте этого искючения
      *
      * @param id
      */
-    private void validateOfficeId(String id) {
+    private void validateId(String msg, String id) {
+        log.debug("Id {}", id);
         if (Strings.isNullOrEmpty(id)) {
-            throw new CustomException("Не заполнено обязательное поле officeId* сотрудника");
+            throw new CustomException(String.format("Не заполнено обязательное поле %s сотрудника", msg));
+        }
+        if (!PATTERN.matcher(id).matches()) {
+            throw new CustomException(String.format("Неверное у сотрудника %s = %s", msg, id));
         }
     }
 }

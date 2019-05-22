@@ -51,7 +51,7 @@ public class UserDaoImpl implements UserDao {
             criteria = criteriaBuilder.and(criteria, predicateForSecondName);
         }
         if (!(Strings.isNullOrEmpty(middleName))) {
-            Predicate predicateForMiddleName = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("secondName")), "%" + middleName.toLowerCase() + "%");
+            Predicate predicateForMiddleName = criteriaBuilder.like(criteriaBuilder.lower(itemRoot.get("middleName")), "%" + middleName.toLowerCase() + "%");
             criteria = criteriaBuilder.and(criteria, predicateForMiddleName);
         }
         if (!(Strings.isNullOrEmpty(possition))) {
@@ -100,10 +100,8 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Country loadCitizenshipByCodeAndName(String code, String name) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
-        CriteriaQuery<Country> criteria;
-        Root<Country> criteriaRoot;
-        criteria = builder.createQuery(Country.class);
-        criteriaRoot = criteria.from(Country.class);
+        CriteriaQuery<Country> criteria = builder.createQuery(Country.class);
+        Root<Country> criteriaRoot = criteria.from(Country.class);
         criteria.where(builder.equal(criteriaRoot.get("code"), code), builder.equal(criteriaRoot.get("name"), name));
         TypedQuery<Country> query = em.createQuery(criteria);
         return query.getResultList().stream().findFirst().orElse(null);

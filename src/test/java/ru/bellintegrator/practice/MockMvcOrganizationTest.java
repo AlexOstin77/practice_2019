@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,7 +20,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -77,7 +78,7 @@ public class MockMvcOrganizationTest {
         mockMvc.perform(
                 post("/api/organization/list")
                         .content(om.writeValueAsString(organizationFilterView))
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(2)));
     }
@@ -89,7 +90,7 @@ public class MockMvcOrganizationTest {
         MvcResult mvcResult = mockMvc.perform(
                 post("/api/organization/list")
                         .content(om.writeValueAsString(organizationFilterView))
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
         Assert.assertEquals("{\"error\":\"Не заполнено обязательное поле name* организации\"}",
@@ -111,7 +112,7 @@ public class MockMvcOrganizationTest {
         mockMvc.perform(
                 post("/api/organization/update")
                         .content(om.writeValueAsString(organizationView))
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/api/organization/{id}", id)
@@ -134,7 +135,7 @@ public class MockMvcOrganizationTest {
         MvcResult mvcResult = mockMvc.perform(
                 post("/api/organization/update")
                         .content(om.writeValueAsString(organizationViewUpdate))
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
         Assert.assertEquals("{\"error\":\"Не заполнены все обязательные поля* организации\"}",
@@ -154,7 +155,7 @@ public class MockMvcOrganizationTest {
         mockMvc.perform(
                 post("/api/organization/save")
                         .content(om.writeValueAsString(organizationView))
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         String id = getIdFromListFilterOrganization(organizationView);
         mockMvc.perform(MockMvcRequestBuilders
@@ -183,7 +184,7 @@ public class MockMvcOrganizationTest {
         MvcResult mvcResult = mockMvc.perform(
                 post("/api/organization/save")
                         .content(om.writeValueAsString(organizationViewAdd))
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
         Assert.assertEquals("{\"error\":\"Не заполнены все обязательные поля* организации\"}",
@@ -198,7 +199,7 @@ public class MockMvcOrganizationTest {
         mockMvc.perform(
                 post("/api/organization/list")
                         .content(om.writeValueAsString(organizationFilterView))
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is("4")))
                 .andExpect(jsonPath("$.length()", is(1)));
