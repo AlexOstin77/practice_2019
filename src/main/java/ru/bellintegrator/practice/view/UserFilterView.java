@@ -115,8 +115,16 @@ public class UserFilterView {
         return docCode;
     }
 
+    public void setDocCode(String docCode) {
+        this.docCode = docCode;
+    }
+
     public String getCitizenshipCode() {
         return citizenshipCode;
+    }
+
+    public void setCitizenshipCode(String citizenshipCode) {
+        this.citizenshipCode = citizenshipCode;
     }
 
     @Override

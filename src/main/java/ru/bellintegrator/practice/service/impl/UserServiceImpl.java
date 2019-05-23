@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserDao dao;
     private static final Pattern PATTERN = Pattern.compile("^\\d*$");
-    private static final String EMPTY_OFFICE_ID = "0";
     private static final String EMPTY_DOCTYPECODE_OR_CITIZENSHIPCODE = "";
 
     @Autowired
@@ -81,22 +80,18 @@ public class UserServiceImpl implements UserService {
         validateId("Id*", view.getId());
         User user = dao.loadUserById(Integer.valueOf(view.getId()));
         validateToNull(view.getId(), "сотрудник", user);
-        Office office = getOffice(view);
-        user.setOffice(office);
-        log.debug("office {} ", office);
+        setOfficeToUser(view, user);
         saveUser(view, user);
     }
 
-    private Office getOffice(UserView view) {
-        Office office;
+    private void setOfficeToUser(UserView view, User user) {
         if (!(Strings.isNullOrEmpty(view.getOfficeId()))) {
             validateId("officeId*", view.getOfficeId());
-            office = dao.loadOfficeById(view.getOfficeId());
+            Office office = dao.loadOfficeById(view.getOfficeId());
+            log.debug("office {} ", office);
             validateToNull(view.getOfficeId(), "офис", office);
-        } else {
-            office = dao.loadOfficeById(EMPTY_OFFICE_ID);
+            user.setOffice(office);
         }
-        return office;
     }
 
     /**

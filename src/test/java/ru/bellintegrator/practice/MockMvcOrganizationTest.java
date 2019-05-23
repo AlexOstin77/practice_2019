@@ -21,8 +21,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -35,7 +35,7 @@ public class MockMvcOrganizationTest {
     private static final ObjectMapper om = new ObjectMapper();
 
     @Test
-    public void testGetOrganizationIsOk() throws Exception {
+    public void testGetOrganizationByIdIsOk() throws Exception {
         OrganizationView organizationView = new OrganizationView();
         organizationView.setId("1");
         organizationView.setName("ОАО СТАРТ");
@@ -72,7 +72,7 @@ public class MockMvcOrganizationTest {
     }
 
     @Test
-    public void testPostOrganizationFilterByNameIsOk() throws Exception {
+    public void testPostFilterOrganizationByNameIsOk() throws Exception {
         OrganizationFilterView organizationFilterView = new OrganizationFilterView();
         organizationFilterView.setName("АО");
         mockMvc.perform(
@@ -84,7 +84,7 @@ public class MockMvcOrganizationTest {
     }
 
     @Test
-    public void testPostOrganizationFilterByNameIsError() throws Exception {
+    public void testPostFilterOrganizationByNameIsError() throws Exception {
         OrganizationFilterView organizationFilterView = new OrganizationFilterView();
         organizationFilterView.setName("");
         MvcResult mvcResult = mockMvc.perform(
@@ -98,7 +98,7 @@ public class MockMvcOrganizationTest {
     }
 
     @Test
-    public void testPostOrganizationUpdateIsOk() throws Exception {
+    public void testPostUpdateOrganizationIsOk() throws Exception {
         String id = "3";
         OrganizationView organizationView = new OrganizationView();
         organizationView.setId(id);
@@ -114,23 +114,11 @@ public class MockMvcOrganizationTest {
                         .content(om.writeValueAsString(organizationView))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        mockMvc.perform(MockMvcRequestBuilders
-                .get("/api/organization/{id}", id)
-                .accept(APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(organizationView.getId())))
-                .andExpect(jsonPath("$.name", is(organizationView.getName())))
-                .andExpect(jsonPath("$.fullName", is(organizationView.getFullName())))
-                .andExpect(jsonPath("$.inn", is(organizationView.getInn())))
-                .andExpect(jsonPath("$.kpp", is(organizationView.getKpp())))
-                .andExpect(jsonPath("$.address", is(organizationView.getAddress())))
-                .andExpect(jsonPath("$.phone", is(organizationView.getPhone())))
-                .andExpect(jsonPath("$.isActive", is(organizationView.getActive())));
+        perfomGetOrganizationById(organizationView);
     }
 
     @Test
-    public void testPostOrganizationUpdateIsError() throws Exception {
+    public void testPostUpdateOrganizationIsError() throws Exception {
         OrganizationView organizationViewUpdate = new OrganizationView();
         MvcResult mvcResult = mockMvc.perform(
                 post("/api/organization/update")
@@ -143,7 +131,7 @@ public class MockMvcOrganizationTest {
     }
 
     @Test
-    public void testPostOrganizationAddIsOk() throws Exception {
+    public void testPostAddOrganizationIsOk() throws Exception {
         OrganizationView organizationView = new OrganizationView();
         organizationView.setName("ЖК НОВАЯ");
         organizationView.setFullName("ДОБАВИТЬ ОРГАНИЗАЦИЮ НОВАЯ");
@@ -158,22 +146,12 @@ public class MockMvcOrganizationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         String id = getIdFromListFilterOrganization(organizationView);
-        mockMvc.perform(MockMvcRequestBuilders
-                .get("/api/organization/{id}", id)
-                .accept(APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is(organizationView.getName())))
-                .andExpect(jsonPath("$.fullName", is(organizationView.getFullName())))
-                .andExpect(jsonPath("$.inn", is(organizationView.getInn())))
-                .andExpect(jsonPath("$.kpp", is(organizationView.getKpp())))
-                .andExpect(jsonPath("$.address", is(organizationView.getAddress())))
-                .andExpect(jsonPath("$.phone", is(organizationView.getPhone())))
-                .andExpect(jsonPath("$.isActive", is(organizationView.getActive())));
+        organizationView.setId(id);
+        perfomGetOrganizationById(organizationView);
     }
 
     @Test
-    public void testPostOrganizationAddEmptyNameIsError() throws Exception {
+    public void testPostAddOrganizationEmptyNameIsError() throws Exception {
         OrganizationView organizationViewAdd = new OrganizationView();
         organizationViewAdd.setName("");
         organizationViewAdd.setFullName("ДОБАВИТЬ ОРГАНИЗАЦИЮ НОВАЯ");
@@ -204,6 +182,22 @@ public class MockMvcOrganizationTest {
                 .andExpect(jsonPath("$[0].id", is("4")))
                 .andExpect(jsonPath("$.length()", is(1)));
         return "4";
+    }
+
+    public void perfomGetOrganizationById(OrganizationView organizationView) throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/api/organization/{id}", organizationView.getId())
+                .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(organizationView.getId())))
+                .andExpect(jsonPath("$.name", is(organizationView.getName())))
+                .andExpect(jsonPath("$.fullName", is(organizationView.getFullName())))
+                .andExpect(jsonPath("$.inn", is(organizationView.getInn())))
+                .andExpect(jsonPath("$.kpp", is(organizationView.getKpp())))
+                .andExpect(jsonPath("$.address", is(organizationView.getAddress())))
+                .andExpect(jsonPath("$.phone", is(organizationView.getPhone())))
+                .andExpect(jsonPath("$.isActive", is(organizationView.getActive())));
     }
 
 }
